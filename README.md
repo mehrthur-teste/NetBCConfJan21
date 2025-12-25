@@ -12,6 +12,7 @@ This repository contains the code samples and materials for the NetBC workshop h
 
 # Project One
 -  1.Producing Structured Output With Agents
+![alt text](p1.png)
 
 <details>
 <summary>🎯 Overview</summary>
