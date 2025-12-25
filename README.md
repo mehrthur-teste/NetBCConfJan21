@@ -5,10 +5,10 @@ This repository contains the code samples and materials for the NetBC workshop h
 
 ## 📋 Índice
 - [Project One](#project-one)
-- [Prerequisites to run] (#Prerequisites)
+- [Prerequisites](#prerequisites)
 - [API Endpoints](#api-endpoints)
 - [Setup Instructions](#setup-instructions)
-- [Project Structure Creation](#Creation of the project)
+- [Creation of the project](#creation-of-the-project)
 
 # Project One
 -  1.Producing Structured Output With Agents
