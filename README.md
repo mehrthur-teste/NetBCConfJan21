@@ -8,13 +8,12 @@ This repository contains the code samples and materials for the NetBC workshop h
 - [API Endpoints](#api-endpoints)
 - [Setup Instructions](#setup-instructions)
 - [Project Structure](#project-structure)
-- [Examples](#examples)
 
 # Project One
 -  1.Producing Structured Output With Agents
 
 <details>
-<summary>🎯 Overview</summary>
+<summary>🎯 Overview Project one
 
 The focus of this workshop session is on producing structured output using agents in .NET applications.
 </details>
@@ -76,14 +75,21 @@ curl -X POST http://localhost:5099/sql-agent-run \
 ```
 </details>
 
-## Response Examples
-**Health Check:**
+## 📝 Response Examples
+
+<details>
+<summary>Health Check Response</summary>
+
 ```json
 {
     "status": "Hello World"
 }
 ```
-**Agent Run:**
+</details>
+
+<details>
+<summary>Agent Run Response</summary>
+
 ```json
 {
     "name": "Cristiano Ronaldo",
@@ -91,7 +97,11 @@ curl -X POST http://localhost:5099/sql-agent-run \
     "occupation": "Software Engineer"
 }
 ```
-**SQL Agent Run:**
+</details>
+
+<details>
+<summary>SQL Agent Run Response</summary>
+
 ```json
 [
     {
@@ -106,6 +116,7 @@ curl -X POST http://localhost:5099/sql-agent-run \
     }
 ]
 ```
+</details>
 ## Prerequisites
 - An Azure OpenAI resource with access to the Chat Completion service.
 - .NET 10.0 SDK or later installed on your machine.
@@ -522,6 +533,6 @@ app.Run();
 5. **Error Handling:** Configuration validation with meaningful error messages
 6. **Dynamic String Replacement:** Template variables replaced at runtime
 7. **RESTful API Design:** Different HTTP methods for different operations
-
+</summary>
 
 
