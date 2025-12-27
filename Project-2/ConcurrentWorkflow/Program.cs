@@ -54,6 +54,8 @@ var workflow = new WorkflowBuilder(startExecutor)
 
 // Execute the workflow in streaming mode
 await using StreamingRun run = await InProcessExecution.StreamAsync(workflow, "What is temperature?");
+Console.WriteLine($"Workflow execution started.");
+
 await foreach (WorkflowEvent evt in run.WatchStreamAsync())
 {
     if (evt is WorkflowOutputEvent output)
