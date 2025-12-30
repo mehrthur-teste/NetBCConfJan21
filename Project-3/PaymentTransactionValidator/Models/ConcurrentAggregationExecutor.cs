@@ -7,11 +7,11 @@ namespace ConcurrentWorkflow.Models;
 /// <summary>
 /// Executor that aggregates the results from the concurrent agents.
 /// </summary>
-internal sealed class ConcurrentAggregationExecutor(int expectedAgentCount = 3) :
+internal sealed class ConcurrentAggregationExecutor(int expectedAgentCount = 2) :
     Executor<List<ChatMessage>>("ConcurrentAggregationExecutor")
 {
     private readonly List<ChatMessage> _messages = [];
-    private readonly int _expectedCount = expectedAgentCount;
+    private readonly int _expectedAgentCount = expectedAgentCount;
 
     /// <summary>
     /// Handles incoming messages from the agents and aggregates their responses.
@@ -25,7 +25,7 @@ internal sealed class ConcurrentAggregationExecutor(int expectedAgentCount = 3) 
     {
         this._messages.AddRange(message);
 
-        if (this._messages.Count == _expectedCount)
+        if (this._messages.Count == _expectedAgentCount)
         {
             var formattedMessages = string.Join(Environment.NewLine,
                 this._messages.Select(m => $"{m.AuthorName}: {m.Text}"));
