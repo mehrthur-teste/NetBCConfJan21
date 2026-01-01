@@ -1,6 +1,6 @@
 # NetBCConfJan21
 
-This workshop is for .NET programming techniques skills.
+This workshop is for .NET programming techniques and skills.
 This repository contains the code samples and materials for the NetBC workshop to be held on January 21, 2026.
 
 ## 📋 Project One Index
@@ -27,7 +27,7 @@ This repository contains the code samples and materials for the NetBC workshop t
 
 The focus of this workshop session is on producing structured output using agents in .NET applications.
 </details>
-# Producing Structured Output With Agents
+roducing Structured Output With Agents: 
 This tutorial shows you how to produce structured output with an agent, using the Azure OpenAI Chat Completion service.
 
 ## API Endpoints
@@ -134,10 +134,10 @@ curl -X POST http://localhost:5099/sql-agent-run \
 ## Setup Instructions
 1. Clone this repository to your local machine.
 
-# Note if you doesn't have Sql Lite to run the project
-- If you do not have SQLite you can run setup_sqlite.sh present on ../../sql-lite folder:
-- First run <code>chmod +x setup_sqlite.sh</code> in a terminal window
-- Next, run <code> ./setup_sqlite.sh</code> in a terminal window
+# Note if you do not have SQLite to run the project
+- If you do not have SQLite you can run _setup_sqlite.sh_ found in _../../sql-lite_ folder:
+- First run `chmod +x setup_sqlite.sh` in a terminal window
+- Next, run `./setup_sqlite.sh` in a terminal window
 
 2. Navigate to the project directory.
 3. Open the `appsettings.json` file and configure your Azure OpenAI settings:
