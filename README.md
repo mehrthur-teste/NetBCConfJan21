@@ -136,8 +136,8 @@ curl -X POST http://localhost:5099/sql-agent-run \
 
 # Note if you doesn't have Sql Lite to run the project
 - If you do not have SQLite you can run setup_sqlite.sh present on ../../sql-lite folder:
-- First <code>chmod +x setup_sqlite.sh</code> in a terminal window
-- Next,  <code>run  ./setup_sqlite.sh</code> in a terminal window
+- First run <code>chmod +x setup_sqlite.sh</code> in a terminal window
+- Next, run <code> ./setup_sqlite.sh</code> in a terminal window
 
 2. Navigate to the project directory.
 3. Open the `appsettings.json` file and configure your Azure OpenAI settings:
@@ -190,7 +190,7 @@ public class SqlAgentRequest
 ```
 These models capture the necessary information to configure and run the agents for structured output generation.
 
-## Describing each one fields
+## Describing each field
 - `Prompt1`: The primary input prompt for the agent.
 - `Prompt2`: An additional input prompt for the agent (used only in `/agent-run`).
 - `NameAssistant`: The name of the assistant to be used.
@@ -201,9 +201,9 @@ These models capture the necessary information to configure and run the agents f
 - `Go`: The main instruction or query for the agent to execute.
 
 ## Note for Prompt's fields
-We can use the Prompt1 field in to Prompt2 as dynamic variable
+We can use the Prompt1 and Prompt2 fields as dynamic variables.
 ## Note for schemaName fields
-schemaName area the models wich we want that the agent kowns to processing the data.
+schemaName area the models which we want that the agent knows to processing the data.
 
 ## Creation of the project
 To create a similar project from scratch, follow these steps:
@@ -213,7 +213,7 @@ To create a similar project from scratch, follow these steps:
     cd AzureOpenAIAgentAPI
     ```
 2. Add necessary NuGet packages for Azure OpenAI and any other dependencies.
-There are the packages that can be replaced on the csproj
+There are the packages that need to be added to your .csproj project file.
 ```xml
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
@@ -373,9 +373,9 @@ INSERT INTO employee (Name, Age, Occupation) VALUES
 - Contains employee data for local development
 - Used as fallback when PostgreSQL is not available
 
-## Program.cs - Step-by-Step Breakdown
+## Program.cs - step-by-step Breakdown
 
-Let's walk through the main Program.cs file like a programming lesson:
+Let's walk through the main _Program.cs_ file like a programming lesson:
 
 ### Step 1: Import Required Libraries
 ```csharp
