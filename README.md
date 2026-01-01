@@ -1,16 +1,16 @@
 # NetBCConfJan21
 
-NetBC is a workshop for .NET programming techniques skills.
-This repository contains the code samples and materials for the NetBC workshop held in January 2021.
+This workshop is for .NET programming techniques skills.
+This repository contains the code samples and materials for the NetBC workshop to be held on January 21, 2026.
 
-## 📋 Indice Project One
+## 📋 Project One Index
 - [Project One](#project-one)
 - [Prerequisites](#prerequisites)
 - [API Endpoints](#api-endpoints)
 - [Setup Instructions](#setup-instructions)
 - [Creation of the project](#creation-of-the-project)
 
-## 📋 Indice Project Two
+## 📋 Project Two Index
 - [Project Two](#project-two)
 - [Prerequisites](#prerequisites-1)
 - [Setup Instructions](#setup-instructions-1)
@@ -19,7 +19,7 @@ This repository contains the code samples and materials for the NetBC workshop h
 - [Creation of the project](#creation-of-the-project-1)
 
 # Project One
--  1.Producing Structured Output With Agents
+-  1. Producing Structured Output With Agents
 ![alt text](p1.png)
 
 <details>
@@ -132,12 +132,12 @@ curl -X POST http://localhost:5099/sql-agent-run \
 - An Azure OpenAI resource with access to the Chat Completion service.
 - .NET 10.0 SDK or later installed on your machine.
 ## Setup Instructions
-1. Clone the repository to your local machine.
+1. Clone this repository to your local machine.
 
 # Note if you doesn't have Sql Lite to run the project
-- If you doesn't have sql-lite you might run setup_sqlite.sh present on ../../sql-lite folder:
-- First Run on the terminal chmod +x setup_sqlite.sh
-- Next the terminal run  ./setup_sqlite.sh
+- If you do not have SQLite you can run setup_sqlite.sh present on ../../sql-lite folder:
+- First <code>chmod +x setup_sqlite.sh</code> in a terminal window
+- Next,  <code>run  ./setup_sqlite.sh</code> in a terminal window
 
 2. Navigate to the project directory.
 3. Open the `appsettings.json` file and configure your Azure OpenAI settings:
