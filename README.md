@@ -134,9 +134,9 @@ curl -X POST http://localhost:5099/sql-agent-run \
 ## Setup Instructions
 1. Clone this repository to your local machine.
 
-# Note if you do not have SQLite to run the project
+# Note: if you do not have SQLite to run the project
 - If you do not have SQLite you can run _setup_sqlite.sh_ found in _../../sql-lite_ folder:
-- First run `chmod +x setup_sqlite.sh` in a terminal window
+- First run ``chmod +x setup_sqlite.sh`` in a terminal window
 - Next, run `./setup_sqlite.sh` in a terminal window
 
 2. Navigate to the project directory.
