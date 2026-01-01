@@ -375,7 +375,7 @@ INSERT INTO employee (Name, Age, Occupation) VALUES
 
 ## Program.cs - step-by-step Breakdown
 
-Let's walk through the main _Program.cs_ file like a programming lesson:
+Let's walk through the main _Program.cs_ file:
 
 ### Step 1: Import Required Libraries
 ```csharp
@@ -414,7 +414,7 @@ string endpoint = builder.Configuration["AzureOpenAI:Endpoint"] ?? throw new Inv
 string apiKey = builder.Configuration["AzureOpenAI:ApiKey"] ?? throw new InvalidOperationException("AzureOpenAI:ApiKey configuration is missing");
 string deploymentName = builder.Configuration["AzureOpenAI:DeploymentName"] ?? throw new InvalidOperationException("AzureOpenAI:DeploymentName configuration is missing");
 ```
-**What this does:** Reads Azure OpenAI settings from appsettings.json and throws errors if any are missing.
+**What this does:** Reads Azure OpenAI settings from _appsettings.json_ and throws errors if any are missing.
 
 ### Step 6: Build the Application
 ```csharp
@@ -475,7 +475,7 @@ app.MapPatch("/employees", async (EmployeeRepository repository, HttpContext con
 });
 ```
 **What this does:** 
-- **Step 8a:** Reads ChatConfig from request body
+- **Step 8a:** Reads _ChatConfig_ from request body
 - **Step 8b:** Creates JSON schema for structured AI responses
 - **Step 8c:** Configures AI agent with instructions and response format
 - **Step 8d:** Creates Azure OpenAI agent instance
@@ -525,9 +525,9 @@ app.MapPost("/agent-run", async (HttpContext context) => {
 });
 ```
 **What this does:**
-- **Step 9a:** Similar to Step 8, but uses PersonInfo schema instead of AIResponse
+- **Step 9a:** Similar to Step 8, but uses _PersonInfo_ schema instead of _AIResponse_
 - **Step 9b:** Generates structured information about a person rather than SQL queries
-- **Step 9c:** Returns PersonInfo object with name, age, and occupation
+- **Step 9c:** Returns _PersonInfo object_ with name, age, and occupation
 
 ### Step 10: Start the Application
 ```csharp
@@ -538,7 +538,7 @@ app.Run();
 ## Key Programming Concepts Demonstrated:
 
 1. **Dependency Injection:** Services are registered and automatically injected
-2. **Configuration Management:** Settings read from appsettings.json
+2. **Configuration Management:** Settings read from _appsettings.json_
 3. **Async/Await Pattern:** All database and AI operations are asynchronous
 4. **JSON Schema Validation:** AI responses are structured using predefined schemas
 5. **Error Handling:** Configuration validation with meaningful error messages
@@ -549,7 +549,7 @@ app.Run();
 ---
 
 # Project Two
-- 2.ConcurrentWorkflow Implementation
+- 2. ConcurrentWorkflow Implementation
 ![alt text](p2.png)
 
 <details>
