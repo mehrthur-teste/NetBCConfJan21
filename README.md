@@ -135,12 +135,13 @@ curl -X POST http://localhost:5099/sql-agent-run \
 1. Clone this repository to your local machine.
 
 # Note: if you do not have SQLite to run the project
+Type ``sqlite3 --version`` to find out whether or not you have SQLite on your computer.
 - If you do not have SQLite you can run _setup_sqlite.sh_ found in _../../sql-lite_ folder:
 - First run ``chmod +x setup_sqlite.sh`` in a terminal window
 - Next, run `./setup_sqlite.sh` in a terminal window
 
 2. Navigate to the project directory.
-3. Open the `appsettings.json` file and configure your Azure OpenAI settings:
+3. Open the _appsettings.json_ file and configure your Azure OpenAI settings:
 ```json
  "AzureOpenAI": {
     "Endpoint": "",
