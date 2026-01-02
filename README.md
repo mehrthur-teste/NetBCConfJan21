@@ -215,25 +215,13 @@ To create a similar project from scratch, follow these steps:
     ```
 2. Add necessary NuGet packages for Azure OpenAI and any other dependencies.
 There are the packages that need to be added to your .csproj project file.
-```xml
-<Project Sdk="Microsoft.NET.Sdk.Web">
-
-  <PropertyGroup>
-    <TargetFramework>net10.0</TargetFramework>
-    <Nullable>enable</Nullable>
-    <ImplicitUsings>enable</ImplicitUsings>
-  </PropertyGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Azure.AI.OpenAI" Version="2.7.0-beta.2" />
-    <PackageReference Include="Azure.Identity" Version="1.17.1" />
-    <PackageReference Include="Dapper" Version="2.1.66" />
-    <PackageReference Include="Microsoft.Agents.AI.OpenAI" Version="1.0.0-preview.251204.1" />
-    <PackageReference Include="Microsoft.Data.Sqlite" Version="10.0.1" />
-    <PackageReference Include="Npgsql" Version="10.0.0" />
-  </ItemGroup>
-
-</Project>
+```bash
+dotnet add package Azure.AI.OpenAI -v 2.7.0-beta.2
+dotnet add package Azure.Identity -v 1.17.1
+dotnet add package Dapper -v 2.1.66
+dotnet add package Microsoft.Agents.AI.OpenAI -v 1.0.0-preview.251204.1
+dotnet add package Microsoft.Data.Sqlite
+dotnet add package Npgsql
 ```
 3. Implement the API endpoints as shown in the tutorial.
 
