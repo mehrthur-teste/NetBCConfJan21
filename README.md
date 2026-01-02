@@ -204,7 +204,7 @@ These models capture the necessary information to configure and run the agents f
 ## Note for Prompt fields
 We can use the Prompt1 and Prompt2 fields as dynamic variables.
 ## Note for _schemaName_ fields
-schemaName area the models which we want that the agent knows to processing the data.
+schemaName are the models which we want the agent to know about when processing data.
 
 ## Creation of the project
 To create a similar project from scratch, follow these steps:
@@ -374,7 +374,7 @@ INSERT INTO employee (Name, Age, Occupation) VALUES
 - Contains employee data for local development
 - Used as fallback when PostgreSQL is not available
 
-## Program.cs - step-by-step Breakdown
+## _Program.cs_ - step-by-step breakdown
 
 Let's walk through the main _Program.cs_ file:
 
@@ -429,7 +429,7 @@ app.MapGet("/", () => "Hello World!");
 ```
 **What this does:** Creates a basic GET endpoint at root URL that returns "Hello World!" for testing.
 
-### Step 8: Create Employee Query Endpoint
+### Step 8: Create _Employee_ Query Endpoint
 ```csharp
 app.MapPatch("/employees", async (EmployeeRepository repository, HttpContext context) =>
 {
@@ -484,7 +484,7 @@ app.MapPatch("/employees", async (EmployeeRepository repository, HttpContext con
 - **Step 8f:** Runs AI agent to generate SQL query
 - **Step 8g:** Executes the generated SQL query and returns employee data
 
-### Step 9: Create Person Information Endpoint
+### Step 9: Create _Person_ Information Endpoint
 ```csharp
 app.MapPost("/agent-run", async (HttpContext context) => {
     // Read request body as ChatConfig
@@ -530,7 +530,7 @@ app.MapPost("/agent-run", async (HttpContext context) => {
 - **Step 9b:** Generates structured information about a person rather than SQL queries
 - **Step 9c:** Returns _PersonInfo object_ with name, age, and occupation
 
-### Step 10: Start the Application
+### Step 10: Start the application
 ```csharp
 app.Run();
 ```
