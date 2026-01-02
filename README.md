@@ -27,7 +27,7 @@ This repository contains the code samples and materials for the NetBC workshop t
 
 The focus of this workshop session is on producing structured output using agents in .NET applications.
 </details>
-roducing Structured Output With Agents: 
+Producing Structured Output With Agents: 
 This tutorial shows you how to produce structured output with an agent, using the Azure OpenAI Chat Completion service.
 
 ## API Endpoints
@@ -550,7 +550,7 @@ app.Run();
 ---
 
 # Project Two
-- 2. ConcurrentWorkflow Implementation
+- 2. _ConcurrentWorkflow_ Implementation
 ![alt text](p2.png)
 
 <details>
