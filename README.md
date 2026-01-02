@@ -135,8 +135,8 @@ curl -X POST http://localhost:5099/sql-agent-run \
 1. Clone this repository to your local machine.
 
 # Note: if you do not have SQLite to run the project
-Type ``sqlite3 --version`` to find out whether or not you have SQLite on your computer.
-- If you do not have SQLite you can run _setup_sqlite.sh_ found in _../../sql-lite_ folder:
+Type ``sqlite3 --version`` in a terminal window to find out whether or not you have SQLite on your computer.
+- If you do not have SQLite you can run ``setup_sqlite.sh`` found in _../../sql-lite_ folder:
 - First run ``chmod +x setup_sqlite.sh`` in a terminal window
 - Next, run `./setup_sqlite.sh` in a terminal window
 
@@ -201,9 +201,9 @@ These models capture the necessary information to configure and run the agents f
 - `Intructions`: Instructions for the agent on how to process the input prompts.
 - `Go`: The main instruction or query for the agent to execute.
 
-## Note for Prompt's fields
+## Note for Prompt fields
 We can use the Prompt1 and Prompt2 fields as dynamic variables.
-## Note for schemaName fields
+## Note for _schemaName_ fields
 schemaName area the models which we want that the agent knows to processing the data.
 
 ## Creation of the project
