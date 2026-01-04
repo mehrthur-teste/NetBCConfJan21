@@ -12,21 +12,15 @@ using Microsoft.Agents.AI.Workflows;
 
 using Microsoft.Extensions.Configuration;
 
-
-
 var builder = WebApplication.CreateBuilder(args);
 
 // Add MemoryCache
 builder.Services.AddMemoryCache();
 
-
 // Add connection string to Configuration
 builder.Services.AddSingleton(sp =>
     builder.Configuration.GetConnectionString("DefaultConnection") ?? string.Empty
 );
-
-// Register Employee repository for dependency injection
-builder.Services.AddScoped<EmployeeRepository>();
 
 // Read configuration values for Azure OpenAI
 string endpoint = builder.Configuration["GitHub:Endpoint"] ?? throw new InvalidOperationException("AzureOpenAI:Endpoint configuration is missing");
@@ -92,8 +86,17 @@ app.MapPost("/run-workflow", async (WorkflowRequest request, IMemoryCache cache)
         .WithOutputFrom(aggregationExecutor)
         .Build();
 
+    // Serializar Transactions para string se existir
+    string transactionData = request.Transactions != null 
+        ? JsonSerializer.Serialize(request.Transactions) 
+        : "";
+    
+    string inputMessage = !string.IsNullOrEmpty(transactionData) 
+        ? $"Analyze these transactions: {transactionData}. {request.Question ?? "Are these transactions fraudulent?"}"
+        : request.Question ?? "According the agents, are these transactions fraudulent mainly the first object? Just answer using Allow or Block.";
+
     // Execute workflow and collect result
-    await using StreamingRun run = await InProcessExecution.StreamAsync(workflow, request.Question ?? "What is temperature?");
+    await using StreamingRun run = await InProcessExecution.StreamAsync(workflow, inputMessage);
     
     string? result = null;
     await foreach (WorkflowEvent evt in run.WatchStreamAsync())
@@ -109,7 +112,6 @@ app.MapPost("/run-workflow", async (WorkflowRequest request, IMemoryCache cache)
         Result = result 
     });
 });
-
 
 
 app.Run();
