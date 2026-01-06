@@ -39,6 +39,7 @@ This tutorial shows you how to produce structured output with an agent, using th
 | `/sql-agent-run` | POST | Run an SQL assistant to generate PostgreSQL queries | `{ "Prompt1": "...", "NameAssistant": "...", "schemaName":"...", "schemaDescription":"...", "Description": "...", "Intructions":"...", "Go": "..." }` |
 
 ### Request Examples
+NOTE: Make sure to match the port number to your project's port number.
 
 <details>
 <summary>🔍 Health Check Example</summary>
