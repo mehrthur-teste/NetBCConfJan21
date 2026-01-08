@@ -11,7 +11,7 @@ This repository contains the code samples and materials for the NetBC workshop t
 - [Creation of the project](#creation-of-the-project)
 
 ## 📋 Project Two Index
-- [Project Three (Concurrent Workflow)](#project-two)
+- [Project Three (Concurrent Workflow)](#project-three)
 - [Prerequisites](#prerequisites-1)
 - [Setup Instructions](#setup-instructions-1)
 - [Usage Examples](#usage-examples)
