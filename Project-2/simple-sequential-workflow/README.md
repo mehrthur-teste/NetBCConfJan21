@@ -16,7 +16,7 @@ dotnet add package Microsoft.Agents.AI.OpenAI -v 1.0.0-preview.251204.1
 dotnet add package Microsoft.Agents.AI.Workflows -v 1.0.0-preview.251204.1
 ```
 
-** Program.cs **
+**Program.cs**
 
 ```C#
 using System;
