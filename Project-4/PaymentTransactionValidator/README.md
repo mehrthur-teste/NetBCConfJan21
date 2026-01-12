@@ -161,7 +161,7 @@ Delete all the sample code that pertains to weather forecasting in _Program.cs_.
 
 Add this code to _Program.cs_ right above _app.Run();_:
 
-```#
+```C#
 app.MapGet("health-check/", () => "Hello World!");
 
 app.MapPost("/create-agent", (Agent AgentConfig, IMemoryCache cache) => {
