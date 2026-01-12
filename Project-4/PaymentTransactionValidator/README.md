@@ -255,7 +255,7 @@ NOTE: you must adjust the port number above with your environment.
 
 Expected output in your browser:
 
-![Health Check expected output](health-check.png)
+<img src="health-check.png" alt="Health Check expected output" width="400">
 
 It would be nice if we can have a suitable API interface to test the other endpoints. We can improve our application so that we have a swagger interface.
 
