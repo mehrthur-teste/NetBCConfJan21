@@ -195,10 +195,154 @@ mkdir Models
 
 ### 4. Implement Core Files
 
-**Program.cs** - Main workflow orchestration
-**Models/ConcurrentStartExecutor.cs** - Workflow initiation
 **Models/ConcurrentAggregationExecutor.cs** - Response aggregation
+
+```C#
+using System;
+using Microsoft.Agents.AI.Workflows;
+using Microsoft.Extensions.AI;
+
+namespace ConcurrentWorkflow.Models;
+
+/// <summary>
+/// Executor that aggregates the results from the concurrent agents.
+/// </summary>
+internal sealed class ConcurrentAggregationExecutor(int expectedAgentCount = 3) :
+    Executor<List<ChatMessage>>("ConcurrentAggregationExecutor") {
+    private readonly List<ChatMessage> _messages = [];
+    private readonly int _expectedCount = expectedAgentCount;
+
+    /// <summary>
+    /// Handles incoming messages from the agents and aggregates their responses.
+    /// </summary>
+    /// <param name="message">The message from the agent</param>
+    /// <param name="context">Workflow context for accessing workflow services and adding events</param>
+    /// <param name="cancellationToken">The <see cref="CancellationToken"/> to monitor for cancellation requests.
+    /// The default is <see cref="CancellationToken.None"/>.</param>
+    /// <returns>A task representing the asynchronous operation</returns>
+    public override async ValueTask HandleAsync(List<ChatMessage> message, IWorkflowContext context, CancellationToken cancellationToken = default) {
+        this._messages.AddRange(message);
+
+        if (this._messages.Count == _expectedCount) {
+            var formattedMessages = string.Join(Environment.NewLine,
+                this._messages.Select(m => $"{m.AuthorName}: {m.Text}"));
+            await context.YieldOutputAsync(formattedMessages, cancellationToken);
+        }
+    }
+}
+```
+
+**Models/ConcurrentStartExecutor.cs** - Workflow initiation
+
+```C#
+using System;
+using Microsoft.Agents.AI.Workflows;
+using Microsoft.Extensions.AI;
+
+namespace ConcurrentWorkflow.Models;
+
+/// <summary>
+/// Executor that starts the concurrent processing by sending messages to the agents.
+/// </summary>
+internal sealed class ConcurrentStartExecutor() : Executor<string>("ConcurrentStartExecutor") {
+    /// <summary>
+    /// Starts the concurrent processing by sending messages to the agents.
+    /// </summary>
+    /// <param name="message">The user message to process</param>
+    /// <param name="context">Workflow context for accessing workflow services and adding events</param>
+    /// <param name="cancellationToken">The <see cref="CancellationToken"/> to monitor for cancellation requests.
+    /// The default is <see cref="CancellationToken.None"/>.</param>
+    /// <returns>A task representing the asynchronous operation</returns>
+    public override async ValueTask HandleAsync(string message, IWorkflowContext context, CancellationToken cancellationToken = default)
+    {
+        // Broadcast the message to all connected agents. Receiving agents will queue
+        // the message but will not start processing until they receive a turn token.
+        await context.SendMessageAsync(new ChatMessage(ChatRole.User, message), cancellationToken);
+
+        // Broadcast the turn token to kick off the agents.
+        await context.SendMessageAsync(new TurnToken(emitEvents: true), cancellationToken);
+    }
+}
+```
+
 **appsettings.json** - GitHub Models configuration
+
+```json
+{
+    "GitHub": {
+        "Token": "PUT-GITHUB-PERSONAL-ACCESS-TOKEN-HERE",
+        "ApiEndpoint": "https://models.github.ai/inference",
+        "Model": "openai/gpt-4o-mini"
+    }
+}
+```
+
+**Program.cs** - Main workflow orchestration
+
+```C#
+using Azure;
+using ConcurrentWorkflow.Models;
+using Microsoft.Agents.AI;
+using Microsoft.Agents.AI.Workflows;
+using Microsoft.Extensions.AI;
+using Microsoft.Extensions.Configuration;
+using OpenAI;
+using OpenAI.Chat;
+
+var config = new ConfigurationBuilder()
+    .SetBasePath(Directory.GetCurrentDirectory())
+    .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+    .Build();
+
+string? apiKey = config["GitHub:Token"];
+string? model = config["GitHub:Model"] ?? "openai/gpt-4o-mini";
+string? endpoint = config["GitHub:ApiEndpoint"] ?? "https://models.github.ai/inference";
+
+Console.WriteLine($"Using model: {model} at endpoint: {endpoint} with API key: {(apiKey != null ? "****" : "null")}");
+
+IChatClient chatClient = new ChatClient(
+    model,
+    new AzureKeyCredential(apiKey!),
+    new OpenAIClientOptions {
+        Endpoint = new Uri(endpoint)
+    }
+)
+.AsIChatClient();
+
+// Create the AI agents with specialized expertise
+ChatClientAgent physicist = new(
+    chatClient,
+    name: "Physicist",
+    instructions: "You are an expert in physics. You answer questions from a physics perspective."
+);
+
+ChatClientAgent chemist = new(
+    chatClient,
+    name: "Chemist",
+    instructions: "You are an expert in chemistry. You answer questions from a chemistry perspective."
+);
+
+var startExecutor = new ConcurrentStartExecutor();
+
+var aggregationExecutor = new ConcurrentAggregationExecutor();
+
+// Build the workflow by adding executors and connecting them
+var workflow = new WorkflowBuilder(startExecutor)
+    .AddFanOutEdge(startExecutor, targets: [physicist, chemist])
+    .AddFanInEdge(sources: [physicist, chemist], aggregationExecutor)
+    .WithOutputFrom(aggregationExecutor)
+    .Build();
+
+// Execute the workflow in streaming mode
+await using StreamingRun run = await InProcessExecution.StreamAsync(workflow, "What is temperature?");
+Console.WriteLine($"Workflow execution started.");
+
+await foreach (WorkflowEvent evt in run.WatchStreamAsync()) {
+    if (evt is WorkflowOutputEvent output) {
+        Console.WriteLine($"Workflow completed with results:\n{output.Data}");
+    }
+}
+```
 
 ### 5. Configure GitHub Models
 - Obtain GitHub Personal Access Token
