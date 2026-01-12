@@ -245,3 +245,15 @@ In a terminal window in the root folder of the app, run the application with:
 dotnet run
 ```
 
+Enter this endpoint in your browser:
+
+```
+http://localhost:5247/health-check
+```
+
+NOTE: you must adjust the port number above with your environment.
+
+Expected output in your browser:
+
+![Health Check expected output](health-check.png)
+
