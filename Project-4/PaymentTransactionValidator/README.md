@@ -1,6 +1,6 @@
-# PaymentTransactionValidator 
+# PaymentTransactionValidator
 
-Create a simple C# minimal API application and add to it a _Models_ folder:
+Create a simple C# minimal API application and add to it a *Models* folder:
 
 ```bash
 dotnet new webapi -n PaymentTransactionValidator
@@ -18,7 +18,7 @@ dotnet add package Microsoft.Agents.AI.Workflows -v 1.0.0-preview.251204.1
 dotnet add package Microsoft.Extensions.AI.OpenAI -v 10.1.0-preview.1.25608.1
 ```
 
-Add this section to _appsettings.Development.json_:
+Add this section to *appsettings.Development.json*:
 
 ```json
 "GitHub": {
@@ -127,7 +127,7 @@ internal sealed class ConcurrentStartExecutor() : Executor<string>("ConcurrentSt
 }
 ```
 
-In _Program.cs_, add this code right under _"var builder = WebApplication.CreateBuilder(args);"_,:
+In *Program.cs*, add this code right under *"var builder = WebApplication.CreateBuilder(args);"*,:
 
 ```C#
 builder.Services.AddMemoryCache();
@@ -143,7 +143,7 @@ string apiKey = builder.Configuration["GitHub:ApiKey"] ?? throw new InvalidOpera
 string model = builder.Configuration["GitHub:model"] ?? throw new InvalidOperationException("AzureOpenAI:DeploymentName configuration is missing");
 ```
 
-Also in _Program.cs_, add this code right under __var app = builder.Build();_:
+Also in *Program.cs*, add this code right under _*var app = builder.Build();*:
 
 ```C#
 IChatClient chatClient = new ChatClient(
@@ -157,9 +157,9 @@ IChatClient chatClient = new ChatClient(
 .AsIChatClient();
 ```
 
-Delete all the sample code that pertains to weather forecasting in _Program.cs_.
+Delete all the sample code that pertains to weather forecasting in *Program.cs*.
 
-Add this code to _Program.cs_ right above _app.Run();_:
+Add this code to *Program.cs* right above *app.Run();*:
 
 ```C#
 app.MapGet("health-check/", () => "Hello World!");
@@ -256,4 +256,36 @@ NOTE: you must adjust the port number above with your environment.
 Expected output in your browser:
 
 ![Health Check expected output](health-check.png)
+
+It would be nice if we can have a suitable API interface to test the other endpoints. We can improve our application so that we have a swagger interface.
+
+Stop the webapi application and add the following *Swashbuckle.AspNetCore* package:
+
+```bash
+dotnet add package Swashbuckle.AspNetCore
+```
+
+In *Program.cs*, add these services:
+
+```C#
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+```
+
+In the same *Program.cs* file, add this code insode the *"if (app.Environment.IsDevelopment())"* block:
+
+Edit the Properties/launchSettings.json file and make these changes:
+
+1. In both the *http* snd *https* blocks, change the value of _launchBrowser_ from *false* to *true*.
+2. Also, in both the *http* snd *https* blocks, add: _"launchUrl": "swagger"_
+
+Let us run our application with from inside the terminal window with:
+
+```bash
+dotnet watch"
+```
+
+This page will automatically load in your browser:
+
+![Swagger UI](swagger-ui.png)
 
