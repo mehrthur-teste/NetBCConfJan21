@@ -9,7 +9,7 @@ cd SequentialWorkflow
 
 Add required nuget packages:
 
-```C#
+```bash
 dotnet add package Azure.AI.OpenAI -v 2.7.0-beta.2
 dotnet add package Azure.Identity -v 1.17.1
 dotnet add package Microsoft.Agents.AI.OpenAI -v 1.0.0-preview.251204.1
