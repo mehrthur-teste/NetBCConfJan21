@@ -69,3 +69,10 @@ Run the application
 ```bash
 dotnet run
 ```
+
+Expected Output:
+
+```bash
+UppercaseExecutor: HELLO, WORLD!
+ReverseTextExecutor: !DLROW ,OLLEH
+```
