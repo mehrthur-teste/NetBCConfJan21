@@ -282,7 +282,7 @@ Edit the Properties/launchSettings.json file and make these changes:
 Let us run our application with from inside the terminal window with:
 
 ```bash
-dotnet watch"
+dotnet watch
 ```
 
 This page will automatically load in your browser:
