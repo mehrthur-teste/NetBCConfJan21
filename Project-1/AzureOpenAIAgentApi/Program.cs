@@ -17,9 +17,9 @@ builder.Services.AddSingleton(sp =>
 builder.Services.AddScoped<EmployeeRepository>();
 
 // Read configuration values for Azure OpenAI
-string endpoint = builder.Configuration["AzureOpenAI:Endpoint"] ?? throw new InvalidOperationException("AzureOpenAI:Endpoint configuration is missing");
-string apiKey = builder.Configuration["AzureOpenAI:ApiKey"] ?? throw new InvalidOperationException("AzureOpenAI:ApiKey configuration is missing");
-string model = builder.Configuration["AzureOpenAI:DeploymentName"] ?? throw new InvalidOperationException("AzureOpenAI:DeploymentName configuration is missing");
+string endpoint = builder.Configuration["GitHub:Endpoint"] ?? throw new InvalidOperationException("GitHub:Endpoint configuration is missing");
+string apiKey = builder.Configuration["GitHub:ApiKey"] ?? throw new InvalidOperationException("GitHub:ApiKey configuration is missing");
+string model = builder.Configuration["GitHub:model"] ?? throw new InvalidOperationException("GitHub:model configuration is missing");
 var app = builder.Build();
 
 
@@ -68,7 +68,7 @@ app.MapPatch("/employees", async (EmployeeRepository repository, HttpContext con
         Description = chatConfig.Description,
         ChatOptions = chatOptions
     });
-    
+
     string? dynamicMessage = chatConfig!.Go!.Replace("{chatConfig.Prompt1}", chatConfig.Prompt1)
                                             .Replace("{chatConfig.Prompt2}", chatConfig.Prompt2);
     var response = await agent.RunAsync(dynamicMessage);
