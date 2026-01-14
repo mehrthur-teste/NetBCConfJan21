@@ -43,7 +43,7 @@ ChatClientAgent chemist = new(
 
 var startExecutor = new ConcurrentStartExecutor();
 
-var aggregationExecutor = new ConcurrentAggregationExecutor();
+var aggregationExecutor = new ConcurrentAggregationExecutor(2);
 
 // Build the workflow by adding executors and connecting them
 var workflow = new WorkflowBuilder(startExecutor)
