@@ -19,7 +19,7 @@ builder.Services.AddScoped<EmployeeRepository>();
 // Read configuration values for Azure OpenAI
 string endpoint = builder.Configuration["AzureOpenAI:Endpoint"] ?? throw new InvalidOperationException("AzureOpenAI:Endpoint configuration is missing");
 string apiKey = builder.Configuration["AzureOpenAI:ApiKey"] ?? throw new InvalidOperationException("AzureOpenAI:ApiKey configuration is missing");
-string deploymentName = builder.Configuration["AzureOpenAI:DeploymentName"] ?? throw new InvalidOperationException("AzureOpenAI:DeploymentName configuration is missing");
+string model = builder.Configuration["AzureOpenAI:DeploymentName"] ?? throw new InvalidOperationException("AzureOpenAI:DeploymentName configuration is missing");
 var app = builder.Build();
 
 
@@ -40,28 +40,48 @@ app.MapPatch("/employees", async (EmployeeRepository repository, HttpContext con
             schemaDescription: chatConfig.SchemaDescription)
     };
 
-    AIAgent agent = new AzureOpenAIClient(
-            new Uri(endpoint),
-            new AzureKeyCredential(apiKey))
-                .GetChatClient(deploymentName)
-                .CreateAIAgent(new ChatClientAgentOptions()
-                {
-                    Name = chatConfig.NameAssistant,
-                    Description = chatConfig.Description,
-                    ChatOptions = chatOptions
-                });
+    IChatClient chatClient = new OpenAI.Chat.ChatClient(
+        model,
+        new AzureKeyCredential(apiKey!),
+        new OpenAIClientOptions
+        {
+            Endpoint = new Uri(endpoint)
+        }
+    )
+    .AsIChatClient();
+
+    // AIAgent agent = new AzureOpenAIClient(
+    //         new Uri(endpoint),
+    //         new AzureKeyCredential(apiKey))
+    //             .GetChatClient(model)
+    //             .CreateAIAgent(new ChatClientAgentOptions()
+    //             {
+    //                 Name = chatConfig.NameAssistant,
+    //                 Description = chatConfig.Description,
+    //                 ChatOptions = chatOptions
+    //             });
+
+    var agent = chatClient
+    .CreateAIAgent(new ChatClientAgentOptions()
+    {
+        Name = chatConfig.NameAssistant,
+        Description = chatConfig.Description,
+        ChatOptions = chatOptions
+    });
+    
     string? dynamicMessage = chatConfig!.Go!.Replace("{chatConfig.Prompt1}", chatConfig.Prompt1)
                                             .Replace("{chatConfig.Prompt2}", chatConfig.Prompt2);
     var response = await agent.RunAsync(dynamicMessage);
     var filter = response.Deserialize<AIResponse>(JsonSerializerOptions.Web);
-    
+
     var employees = await repository.GetEmployeesAsync(filter.AIAnswer!);
-    
+
     return Results.Ok(employees);
 });
 
 
-app.MapPost("/agent-run", async (HttpContext context) => {
+app.MapPost("/agent-run", async (HttpContext context) =>
+{
 
     var chatConfig = await context.Request.ReadFromJsonAsync<ChatConfig>();
 
@@ -76,22 +96,41 @@ app.MapPost("/agent-run", async (HttpContext context) => {
             schemaDescription: chatConfig.SchemaDescription)
     };
 
+    IChatClient chatClient = new OpenAI.Chat.ChatClient(
+        model,
+        new AzureKeyCredential(apiKey!),
+        new OpenAIClientOptions
+        {
+            Endpoint = new Uri(endpoint)
+        }
+    )
+    .AsIChatClient();
 
-    AIAgent agent = new AzureOpenAIClient(
-            new Uri(endpoint),
-            new AzureKeyCredential(apiKey))
-                .GetChatClient(deploymentName)
-                .CreateAIAgent(new ChatClientAgentOptions()
-                {
-                    Name = chatConfig.NameAssistant,
-                    Description = chatConfig.Description,
-                    ChatOptions = chatOptions
-                });
+
+    // AIAgent agent = new AzureOpenAIClient(
+    //         new Uri(endpoint),
+    //         new AzureKeyCredential(apiKey))
+    //             .GetChatClient(model)
+    //             .CreateAIAgent(new ChatClientAgentOptions()
+    //             {
+    //                 Name = chatConfig.NameAssistant,
+    //                 Description = chatConfig.Description,
+    //                 ChatOptions = chatOptions
+    //             });
+
+    var agent = chatClient
+    .CreateAIAgent(new ChatClientAgentOptions()
+    {
+        Name = chatConfig.NameAssistant,
+        Description = chatConfig.Description,
+        ChatOptions = chatOptions
+    });
+
     string? dynamicMessage = chatConfig!.Go!.Replace("{chatConfig.Prompt1}", chatConfig.Prompt1)
                                             .Replace("{chatConfig.Prompt2}", chatConfig.Prompt2);
     var response = await agent.RunAsync(dynamicMessage);
     var personInfo = response.Deserialize<PersonInfo>(JsonSerializerOptions.Web);
     return Results.Ok(personInfo);
-    });
+});
 
 app.Run();
