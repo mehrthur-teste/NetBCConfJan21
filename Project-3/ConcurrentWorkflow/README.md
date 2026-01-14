@@ -324,7 +324,7 @@ ChatClientAgent chemist = new(
 
 var startExecutor = new ConcurrentStartExecutor();
 
-var aggregationExecutor = new ConcurrentAggregationExecutor();
+var aggregationExecutor = new ConcurrentAggregationExecutor(2);
 
 // Build the workflow by adding executors and connecting them
 var workflow = new WorkflowBuilder(startExecutor)
@@ -344,7 +344,40 @@ await foreach (WorkflowEvent evt in run.WatchStreamAsync()) {
 }
 ```
 
-### 5. Configure GitHub Models
+### 5. Run the application
+
+```bash
+dotnet run
+```
+
+**Expected Output**
+```
+Using model: openai/gpt-4o-mini at endpoint: https://models.github.ai/inference with API key: ****
+Workflow completed with results:
+Chemist: Temperature is a measure of the average kinetic energy of the particles in a substance. It indicates how hot or cold an object is and is a fundamental physical quantity in various scientific fields, including chemistry, physics, and thermodynamics.
+
+In more detail, temperature reflects the energy of motion of atoms and molecules. When the temperature increases, the average speed of the particles increases, resulting in higher kinetic energy. Conversely, lower temperatures correspond to slower-moving particles and lower kinetic energy.
+
+Temperature is measured using different scales, with the most common being Celsius (°C), Fahrenheit (°F), and Kelvin (K). The Kelvin scale is particularly important in scientific contexts because it is an absolute temperature scale, starting at absolute zero (0 K), the point at which all classical molecular motion ceases, which corresponds to -273.15 °C.
+
+In chemistry, temperature plays a crucial role in influencing reaction rates, the solubility of substances, and other thermodynamic properties, making it an essential factor in both experimental and theoretical studies.
+Physicist: Temperature is a measure of the average kinetic energy of the particles in a substance. It is a fundamental parameter in thermodynamics and plays a critical role in determining the state of matter (solid, liquid, gas) and the direction of heat flow between objects.
+
+In more technical terms, temperature can be defined in several ways:
+
+1. Thermodynamic Definition: In thermodynamics, temperature is a measure of the thermal energy of a system in relation to its entropy. It can be defined through the second law of thermodynamics, which states that heat will flow spontaneously from a hotter object to a cooler one.
+
+2. Kinetic Theory: According to the kinetic theory of gases, temperature is directly related to the average kinetic energy of the particles in a gas. As the temperature increases, the average speed of the particles increases, leading to higher kinetic energy.
+
+3. Temperature Scales: Temperature is measured using various scales, with the most common being Celsius (°C), Kelvin (K), and Fahrenheit (°F). The Kelvin scale is the SI unit for temperature, where 0 K corresponds to absolute zero, the point at which molecular motion theoretically comes to a complete halt.
+
+4. Absolute Zero: Absolute zero (0 K or -273.15 °C) is the theoretical temperature at which a system possesses minimal thermal energy. At this point, the entropy of a perfect crystal reaches its minimum value.
+
+In practical applications, temperature is crucial in a wide range of fields, including meteorology, engineering, biology, and materials science, influencing everything from weather patterns to the behavior of materials under different conditions.
+```
+
+
+### 6. Configure GitHub Models
 - Obtain GitHub Personal Access Token
 - Configure appsettings.json with token and model settings
 - Test connection with provided script
