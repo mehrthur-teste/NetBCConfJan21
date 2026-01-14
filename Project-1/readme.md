@@ -122,7 +122,7 @@ Add these endpoints right before _app.Run();_ in _Program.cs_:
 app.MapGet("health-check/", () => "Hello World!");
 
 // Endpoint para pegar empregados com o filtro
-app.MapPatch("/employees", async (EmployeeRepository repository, HttpContext context) =>
+app.MapPatch("/sql-agent-run", async (EmployeeRepository repository, HttpContext context) =>
 {
     var chatConfig = await context.Request.ReadFromJsonAsync<ChatConfig>();
     JsonElement schema = AIJsonUtilities.CreateJsonSchema(typeof(AIResponse));
@@ -223,6 +223,8 @@ INSERT INTO employee (Name, Age, Occupation) VALUES
 ('Jane Smith', 28, 'Data Analyst'),
 ('Alice Johnson', 35, 'Product Manager');
 ```
+Using an SQLite interface, execute the above SQL command to create an _employees_ table and populate it with some sample data.
+
 You can now start your application by executing the following command in the termnal window:
 ```bash
 dotnet run
@@ -244,5 +246,18 @@ curl -X POST http://localhost:5241/agent-run \
 }'
 ```
 
-NOTE: Adjust the port number in the above command to match your environment.
+**NOTE: Adjust the port number in the above command to match your environment.**
 
+Similaraly, you can execute this command to test out the _sql-agent-run_ endpoint:
+```bash
+curl -X PATCH http://localhost:5122/sql-agent-run \
+-H "Content-Type: application/json" \
+-d '{
+    "Prompt1": "Table is employee built as Name VARCHAR(100), Age INT, Occupation VARCHAR(100)",
+    "NameAssistant": "SQLHelpfulAssistant",
+    "Description" : "An AI assistant that query to inject sql postgres client.",
+    "schemaName": "PersonInfo",
+    "schemaDescription": "Contains only a raw SQL query with no explanation or additional text",
+    "Go" : "Please provide a quickly and sample query -  select all employe who is not software enginner remember that - {chatConfig.Prompt1} ?"
+}'
+```
