@@ -188,12 +188,27 @@ dotnet add package Microsoft.Extensions.Configuration --version 10.0.1
 dotnet add package Microsoft.Extensions.Configuration.Json --version 10.0.1
 ```
 
-### 3. Create Project Structure
+### 3. Configure _appsettings.json_.
+
+**appsettings.json** - GitHub Models configuration
+
+```json
+{
+    "GitHub": {
+        "Token": "PUT-GITHUB-PERSONAL-ACCESS-TOKEN-HERE",
+        "ApiEndpoint": "https://models.github.ai/inference",
+        "Model": "openai/gpt-4o-mini"
+    }
+}
+```
+Make sure you put the correct value for your Github personal access token.
+
+### 4. Create Project Structure
 ```bash
 mkdir Models
 ```
 
-### 4. Implement Core Files
+### 5. Implement Core Files
 
 **Models/ConcurrentAggregationExecutor.cs** - Response aggregation
 
@@ -265,18 +280,6 @@ internal sealed class ConcurrentStartExecutor() : Executor<string>("ConcurrentSt
 }
 ```
 
-**appsettings.json** - GitHub Models configuration
-
-```json
-{
-    "GitHub": {
-        "Token": "PUT-GITHUB-PERSONAL-ACCESS-TOKEN-HERE",
-        "ApiEndpoint": "https://models.github.ai/inference",
-        "Model": "openai/gpt-4o-mini"
-    }
-}
-```
-
 **Program.cs** - Main workflow orchestration
 
 ```C#
@@ -344,7 +347,7 @@ await foreach (WorkflowEvent evt in run.WatchStreamAsync()) {
 }
 ```
 
-### 5. Run the application
+### 6. Run the application
 
 ```bash
 dotnet run
@@ -377,7 +380,7 @@ In practical applications, temperature is crucial in a wide range of fields, inc
 ```
 
 
-### 6. Configure GitHub Models
+### 7. Configure GitHub Models
 - Obtain GitHub Personal Access Token
 - Configure appsettings.json with token and model settings
 - Test connection with provided script
