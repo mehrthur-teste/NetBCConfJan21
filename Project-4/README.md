@@ -274,7 +274,7 @@ builder.Services.AddSwaggerGen();
 
 In the same *Program.cs* file, add this code insode the *"if (app.Environment.IsDevelopment())"* block:
 
-Edit the Properties/launchSettings.json file and make these changes:
+Edit the _Properties/launchSettings.json_ file and make these changes:
 
 1. In both the *http* snd *https* blocks, change the value of _launchBrowser_ from *false* to *true*.
 2. Also, in both the *http* snd *https* blocks, add: _"launchUrl": "swagger"_
