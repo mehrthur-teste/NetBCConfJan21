@@ -291,5 +291,5 @@ This page will automatically load in your browser:
 
 Let us test endpoints _/create-agent_ and _/run-workflow_. We will start with the _/create-agent_ endpoint. Click on it:
 
-![/create-agent](image.png)
+![/create-agent](create-agent.png)
 
