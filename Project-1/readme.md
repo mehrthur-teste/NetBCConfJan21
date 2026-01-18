@@ -9,7 +9,7 @@ dotnet new gitignore
 
 If you dont have SQL Lite and you notebook is mac :
   1. Inside folder `GitHubAIAgentAPI` create another folder and give this name  - `sql-lite`.
-  2. Then create a `.sh` file which name is **`setup_sqlite.sh`** .
+  2. Then create a `.sh` file which the recomended name is **`setup_sqlite.sh`** .
   3. Inside this file paste below code :
     ```bash
     !/bin/bash
@@ -66,7 +66,7 @@ If you dont have SQL Lite and you notebook is mac :
     ```bash
     ./setup_sqlite.sh
     ```
-In the same terminal window, add required packages with:
+In the same terminal window (inside GitHubAIAgentAPI workspace), add required packages with:
 ```bash
 dotnet add package Azure.AI.OpenAI -v 2.7.0-beta.2
 dotnet add package Azure.Identity -v 1.17.1
@@ -75,7 +75,7 @@ dotnet add package Microsoft.Agents.AI.OpenAI -v 1.0.0-preview.251204.1
 dotnet add package Microsoft.Data.Sqlite
 dotnet add package Npgsql
 ```
-Open the folder in your favorite editor anduUpdate the _appsettings.Development.json_ file with these sections. 
+Open the folder in your favorite editor and update the _appsettings.Development.json_ file with these sections. 
 
 ```json
 "GitHub": {
@@ -92,17 +92,6 @@ Remember to:
 1. replace _PUT YOUR GITHUB PERSONAL ACCESS TOKEN HERE_ with your GitHub personal access token.
 2. Add _appsettings.Development.json_ to your .gitignore so that this confidential info does not find its way into source control.
 
-In _Program.cs_, add this code right under _"var builder = WebApplication.CreateBuilder(args);"_ to read-in the settings from _appsettings.Development.json_, register the _OpenApi_ service, and configure DB connection:
-```c#
-string? apiKey = builder.Configuration["GitHub:Token"];
-string? model = builder.Configuration["GitHub:Model"] ?? "openai/gpt-4o-mini";
-string? endpoint = builder.Configuration["GitHub:ApiEndpoint"] ?? "https://models.github.ai/inference";
-
-builder.Services.AddSingleton(sp =>
-    builder.Configuration.GetConnectionString("DefaultConnection") ?? string.Empty
-);
-```
-
 Create a folder named _Entities_ and add to it a C# class file named _PersonEntity.cs_ with this code:
 ```C#
 public class PersonEntity {
@@ -110,39 +99,6 @@ public class PersonEntity {
     public int? Age { get; set; }
     public string? Occupation { get; set; }
 }
-```
-Add another folder named _Dapper_ and add to it this C# class named _EmployeeRepository.cs_:
-```csharp
-public class EmployeeRepository {
-    private readonly string _connectionString;
-
-    public EmployeeRepository(string connectionString) {
-        _connectionString = connectionString;
-    }
-
-    public async Task<IEnumerable<PersonEntity>> GetEmployeesAsync(string filter) {
-        try
-        {
-            using (IDbConnection dbConnection = new NpgsqlConnection(_connectionString)) {
-                dbConnection.Open();
-                var employees = await dbConnection.QueryAsync<PersonEntity>(filter);
-                return employees;
-            } 
-        } catch (Exception ex) {
-            using (IDbConnection dbConnection = new SqliteConnection(_connectionString))
-            {
-                dbConnection.Open();
-                var employees = await dbConnection.QueryAsync<PersonEntity>(filter);
-                return employees;
-            }
-        }
-    }
-}
-```
-
-Register _EmployeeRepository_ by adding this code to _Program.cs_:
-```c#
-builder.Services.AddScoped<EmployeeRepository>();
 ```
 
 Create a _Models_ folder and add to it C# classes _AIResponse.cs_, _ChatConfig.cs_, and _PersonInfo.cs_ :
@@ -176,6 +132,52 @@ public class PersonInfo {
     public string? Occupation { get; set; }
     public string? AIresponse { get; set; }
 }
+```
+
+
+In _Program.cs_, add this code right under _"var builder = WebApplication.CreateBuilder(args);"_ to read-in the settings from _appsettings.Development.json_, register the _OpenApi_ service, and configure DB connection:
+```c#
+string? apiKey = builder.Configuration["GitHub:Token"];
+string? model = builder.Configuration["GitHub:Model"] ?? "openai/gpt-4o-mini";
+string? endpoint = builder.Configuration["GitHub:ApiEndpoint"] ?? "https://models.github.ai/inference";
+
+builder.Services.AddSingleton(sp =>
+    builder.Configuration.GetConnectionString("DefaultConnection") ?? string.Empty
+);
+```
+
+Add another folder named _Dapper_ and add to it this C# class named _EmployeeRepository.cs_:
+```csharp
+public class EmployeeRepository {
+    private readonly string _connectionString;
+
+    public EmployeeRepository(string connectionString) {
+        _connectionString = connectionString;
+    }
+
+    public async Task<IEnumerable<PersonEntity>> GetEmployeesAsync(string filter) {
+        try
+        {
+            using (IDbConnection dbConnection = new NpgsqlConnection(_connectionString)) {
+                dbConnection.Open();
+                var employees = await dbConnection.QueryAsync<PersonEntity>(filter);
+                return employees;
+            } 
+        } catch (Exception ex) {
+            using (IDbConnection dbConnection = new SqliteConnection(_connectionString))
+            {
+                dbConnection.Open();
+                var employees = await dbConnection.QueryAsync<PersonEntity>(filter);
+                return employees;
+            }
+        }
+    }
+}
+```
+
+Register _EmployeeRepository_ by adding this code to _Program.cs_:
+```c#
+builder.Services.AddScoped<EmployeeRepository>();
 ```
 Remove all Weather related code in _Program.cs_. 
 
