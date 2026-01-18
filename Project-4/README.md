@@ -127,9 +127,26 @@ internal sealed class ConcurrentStartExecutor() : Executor<string>("ConcurrentSt
 }
 ```
 
-In *Program.cs*, add this code right under *"var builder = WebApplication.CreateBuilder(args);"*,:
+In *Program.cs*, add this code :
 
 ```C#
+using Azure;
+using Azure.AI.OpenAI;
+using Microsoft.Agents.AI;
+using Microsoft.Extensions.AI;
+using System.Text.Json;
+using OpenAI;
+using OpenAI.Chat;
+using Microsoft.Extensions.Caching.Memory;
+
+using ConcurrentWorkflow.Models;
+using Microsoft.Agents.AI.Workflows;
+
+using Microsoft.Extensions.Configuration;
+
+var builder = WebApplication.CreateBuilder(args);
+
+// Add MemoryCache
 builder.Services.AddMemoryCache();
 
 // Add connection string to Configuration
@@ -141,11 +158,8 @@ builder.Services.AddSingleton(sp =>
 string endpoint = builder.Configuration["GitHub:Endpoint"] ?? throw new InvalidOperationException("AzureOpenAI:Endpoint configuration is missing");
 string apiKey = builder.Configuration["GitHub:ApiKey"] ?? throw new InvalidOperationException("AzureOpenAI:ApiKey configuration is missing");
 string model = builder.Configuration["GitHub:model"] ?? throw new InvalidOperationException("AzureOpenAI:DeploymentName configuration is missing");
-```
+var app = builder.Build();
 
-Also in *Program.cs*, add this code right under _*var app = builder.Build();*:
-
-```C#
 IChatClient chatClient = new ChatClient(
     model,
     new AzureKeyCredential(apiKey!),
@@ -155,13 +169,7 @@ IChatClient chatClient = new ChatClient(
     }
 )
 .AsIChatClient();
-```
 
-Delete all the sample code that pertains to weather forecasting in *Program.cs*.
-
-Add this code to *Program.cs* right above *app.Run();*:
-
-```C#
 app.MapGet("health-check/", () => "Hello World!");
 
 app.MapPost("/create-agent", (Agent AgentConfig, IMemoryCache cache) => {
@@ -192,6 +200,7 @@ app.MapPost("/create-agent", (Agent AgentConfig, IMemoryCache cache) => {
     
     return Results.Ok(result);
 });
+
 
 app.MapPost("/run-workflow", async (WorkflowRequest request, IMemoryCache cache) => {
     var startExecutor = new ConcurrentStartExecutor();
@@ -235,6 +244,10 @@ app.MapPost("/run-workflow", async (WorkflowRequest request, IMemoryCache cache)
         Result = result 
     });
 });
+
+
+app.Run();
+
 ```
 
 **Try the application**
