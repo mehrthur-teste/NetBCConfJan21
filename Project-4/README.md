@@ -466,3 +466,167 @@ Let us test endpoints _/create-agent_ and _/run-workflow_. We will start with th
 
 ![/create-agent](create-agent.png)
 
+Click on the "Try it out" button.
+
+![Try it out](try-it-out.png)
+
+Enter test data:
+
+![test data](test-data.png)
+
+Just copy and paste this sample in the above text area:
+
+```json
+{
+  "prompts": [
+     {
+        "name": "GeospatialFraudAgent",
+        "description": "Agent specialized in geospatial and temporal feasibility analysis for fraud detection",
+        "instructions": "You are an expert in geospatial analysis and spatiotemporal modeling. Validate whether latitude and longitude coordinates, combined with timestamps, indicate that a person could realistically move between locations in the given time. Identify impossible or highly improbable travel patterns that may indicate card cloning or transaction replay fraud. Consider distance, time difference, typical transportation methods, and human mobility limits. You just analyze the data and your return is just: your name and allow or block."
+     }
+  ]
+}
+```
+
+Click on the blue _Execute_ button.
+
+![execute test data](execute-test-data.png)
+
+Under "Server response", copy the value of _id_ and save it somewhere. You will need it later.
+
+![ID](guid.png)
+
+Next, we will try the other _/run-workflow_ endpoint. Click on it.
+
+![run workflow](run-workflow.png)
+
+Click on the "Try it out" button.
+
+![try it out 2](try-it-out-2.png)
+
+Replace the value of _agentIds_ with the ID that you have copied earlier from the _create-agent_ endpoint. Also, replace the value of _question_ with the following:
+
+```
+Given that I have never traveled outside Brazil or made purchases abroad, does the first transaction in the transaction history appear to be fraudulent?
+```
+
+We will add an array of transactions later. At this stage, our _Request body_ looks like this:
+
+![Agent ID and Question](id-and-q.png)
+
+For the value of _transactions_, add this transaction array:
+
+```json
+[
+{
+"id": "tx-001",
+"nome": "Pagamento Restaurante",
+"valor": 89.90,
+"horario": "2026-01-03T12:45:00-03:00",
+"latitude": -23.550520,
+"longitude": -46.633308,
+"pais_remetente": "Brasil",
+"conta_remetente": "BR-ACC-982341",
+"retentativas_falhadas": [
+{
+"tentativa": 1,
+"horario": "2026-01-03T12:43:10-03:00",
+"motivo": "Saldo insuficiente"
+}
+]
+},
+{
+"id": "tx-002",
+"nome": "Compra Online",
+"valor": 249.99,
+"horario": "2026-01-03T09:15:00-03:00",
+"latitude": 40.712776,
+"longitude": -74.005974,
+"pais_remetente": "Estados Unidos",
+"conta_remetente": "US-ACC-774512",
+"retentativas_falhadas": [
+{
+"tentativa": 1,
+"horario": "2026-01-03T09:12:40-03:00",
+"motivo": "Cartão bloqueado temporariamente"
+},
+{
+"tentativa": 2,
+"horario": "2026-01-03T09:14:05-03:00",
+"motivo": "Timeout de comunicação"
+}
+]
+},
+{
+"id": "tx-003",
+"nome": "Assinatura Streaming",
+"valor": 39.90,
+"horario": "2026-01-02T22:30:00-03:00",
+"latitude": 51.507351,
+"longitude": -0.127758,
+"pais_remetente": "Reino Unido",
+"conta_remetente": "UK-ACC-556900",
+"retentativas_falhadas": []
+},
+{
+"id": "tx-004",
+"nome": "Transferência Internacional",
+"valor": 1200.00,
+"horario": "2026-01-02T16:10:00-03:00",
+"latitude": 48.856613,
+"longitude": 2.352222,
+"pais_remetente": "França",
+"conta_remetente": "FR-ACC-330178",
+"retentativas_falhadas": [
+{
+"tentativa": 1,
+"horario": "2026-01-02T16:05:22-03:00",
+"motivo": "Falha na verificação antifraude"
+}
+]
+},
+{
+"id": "tx-005",
+"nome": "Compra Supermercado",
+"valor": 156.75,
+"horario": "2026-01-01T18:55:00-03:00",
+"latitude": -34.603684,
+"longitude": -58.381559,
+"pais_remetente": "Argentina",
+"conta_remetente": "AR-ACC-998721",
+"retentativas_falhadas": [
+{
+"tentativa": 1,
+"horario": "2026-01-01T18:50:11-03:00",
+"motivo": "PIN incorreto"
+},
+{
+"tentativa": 2,
+"horario": "2026-01-01T18:52:30-03:00",
+"motivo": "PIN incorreto"
+}
+]
+},
+{
+"id": "tx-006",
+"nome": "Pagamento Transporte",
+"valor": 12.50,
+"horario": "2026-01-01T08:20:00-03:00",
+"latitude": 19.432608,
+"longitude": -99.133209,
+"pais_remetente": "México",
+"conta_remetente": "MX-ACC-441209",
+"retentativas_falhadas": [
+{
+"tentativa": 10,
+"horario": "2026-01-01T08:18:02-03:00",
+"motivo": "Erro de rede"
+}
+]
+}
+]
+```
+
+Click on the blue _Execute_ button. The response confirms that the transaction is indeed fraudulent.
+
+![bad transaction](bad-transation.png)
