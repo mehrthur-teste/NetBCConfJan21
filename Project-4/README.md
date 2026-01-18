@@ -488,11 +488,11 @@ Just copy and paste this sample in the above text area:
 }
 ```
 
-Click on the blue Execute button.
+Click on the blue _Execute_ button.
 
 ![execute test data](execute-test-data.png)
 
-Under "Server response", copy the value of id and paste it somewhere. You will need it later.
+Under "Server response", copy the value of _id_ and save it somewhere. You will need it later.
 
 ![ID](guid.png)
 
@@ -504,13 +504,13 @@ Click on the "Try it out" button.
 
 ![try it out 2](try-it-out-2.png)
 
-Replace the value agentIds with the ID that you have copied earlier from the _create-agent_ endpoin. Also, replace the value of _question_ with the following:
+Replace the value of _agentIds_ with the ID that you have copied earlier from the _create-agent_ endpoint. Also, replace the value of _question_ with the following:
 
 ```
 Given that I have never traveled outside Brazil or made purchases abroad, does the first transaction in the transaction history appear to be fraudulent?
 ```
 
-We will add an attay of transactions later. At this stage, our _Request body_ looks like this:
+We will add an array of transactions later. At this stage, our _Request body_ looks like this:
 
 ![Agent ID and Question](id-and-q.png)
 
@@ -630,4 +630,3 @@ For the value of _transactions_, add this transaction array:
 Click on the blue _Execute_ button. The response confirms that the transaction is indeed fraudulent:
 
 ![fradulent transaction](fraudulent-transation.png)
-
