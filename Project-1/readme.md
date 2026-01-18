@@ -348,7 +348,7 @@ curl -X PATCH http://localhost:5122/employees \
 }'
 ```
 
-Or running using .http
+Or running using .http file
 ```http
 @GitHubAIAgentAPI_HostAddress = http://localhost:5010
 

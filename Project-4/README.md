@@ -264,6 +264,160 @@ In a terminal window in the root folder of the app, run the application with:
 dotnet run
 ```
 
+
+Or running using .http file
+```http
+@GitHubAIAgentAPI_HostAddress = http://localhost:5010
+
+
+POST {{GitHubAIAgentAPI_HostAddress}}/create-agent
+Content-Type: application/json
+
+{
+  "prompts": [
+    {
+      "name": "GeospatialFraudAgent",
+      "description": "Agent specialized in geospatial and temporal feasibility analysis for fraud detection",
+      "instructions": "You are an expert in geospatial analysis and spatiotemporal modeling. Validate whether latitude and longitude coordinates, combined with timestamps, indicate that a person could realistically move between locations in the given time. Identify impossible or highly improbable travel patterns that may indicate card cloning or transaction replay fraud. Consider distance, time difference, typical transportation methods, and human mobility limits. You just analyze the data and your return is just: your name and allow or block."
+    },
+    {
+      "name": "BehavioralRetryAgent",
+      "description": "Agent specialized in behavioral analysis of failed transaction retries",
+      "instructions": "You are an expert in behavioral fraud analysis. Analyze failed retry attempts, their frequency, timing, and failure reasons to determine whether they indicate suspicious behavior such as brute-force attempts, credential testing, or automated misuse. Identify patterns like rapid retries, repeated failures for the same reason, or escalation toward a successful transaction. You just analyze the data and your return is just: your name and allow or block."
+    },
+    {
+      "name": "TransactionPatternAgent",
+      "description": "Agent specialized in transaction pattern and contextual risk analysis",
+      "instructions": "You are an expert in financial transaction analysis and fraud pattern detection. Evaluate whether the country of origin, transaction value, merchant location, and contextual metadata form suspicious patterns. Look for anomalies such as unusual country-value combinations, atypical spending behavior for a region, sudden value spikes, or inconsistencies between transaction location and user profile. You just analyze the data and your return is just: your name and allow or block."
+    }
+  ]
+}
+
+
+###
+
+PATCH {{GitHubAIAgentAPI_HostAddress}}/run-workflow
+Content-Type: application/json
+{
+    "Question": "I have never been to Brazil and have never purchased anything from Brazil. According to the transaction history object, is the first transaction fraudulent?",
+    "AgentIds": [
+        "483677cd514d4b8eb55c0c0851aa362f",
+        "b4b8011e372d4c62abdbb855fcb7b158",
+        "4422f07ab60646449d1e726c79aa698d"
+    ],
+    "transactions": [
+        {
+            "id": "tx-001",
+            "name": "Restaurant Payment",
+            "amount": 89.90,
+            "timestamp": "2026-01-03T12:45:00-03:00",
+            "latitude": -23.550520,
+            "longitude": -46.633308,
+            "sender_country": "Brazil",
+            "sender_account": "BR-ACC-982341",
+            "failed_attempts": [
+                {
+                    "attempt": 1,
+                    "timestamp": "2026-01-03T12:43:10-03:00",
+                    "reason": "Insufficient balance"
+                }
+            ]
+        },
+        {
+            "id": "tx-002",
+            "name": "Online Purchase",
+            "amount": 249.99,
+            "timestamp": "2026-01-03T09:15:00-03:00",
+            "latitude": 40.712776,
+            "longitude": -74.005974,
+            "sender_country": "United States",
+            "sender_account": "US-ACC-774512",
+            "failed_attempts": [
+                {
+                    "attempt": 1,
+                    "timestamp": "2026-01-03T09:12:40-03:00",
+                    "reason": "Card temporarily blocked"
+                },
+                {
+                    "attempt": 2,
+                    "timestamp": "2026-01-03T09:14:05-03:00",
+                    "reason": "Communication timeout"
+                }
+            ]
+        },
+        {
+            "id": "tx-003",
+            "name": "Streaming Subscription",
+            "amount": 39.90,
+            "timestamp": "2026-01-02T22:30:00-03:00",
+            "latitude": 51.507351,
+            "longitude": -0.127758,
+            "sender_country": "United Kingdom",
+            "sender_account": "UK-ACC-556900",
+            "failed_attempts": []
+        },
+        {
+            "id": "tx-004",
+            "name": "International Transfer",
+            "amount": 1200.00,
+            "timestamp": "2026-01-02T16:10:00-03:00",
+            "latitude": 48.856613,
+            "longitude": 2.352222,
+            "sender_country": "France",
+            "sender_account": "FR-ACC-330178",
+            "failed_attempts": [
+                {
+                    "attempt": 1,
+                    "timestamp": "2026-01-02T16:05:22-03:00",
+                    "reason": "Anti-fraud verification failed"
+                }
+            ]
+        },
+        {
+            "id": "tx-005",
+            "name": "Grocery Purchase",
+            "amount": 156.75,
+            "timestamp": "2026-01-01T18:55:00-03:00",
+            "latitude": -34.603684,
+            "longitude": -58.381559,
+            "sender_country": "Argentina",
+            "sender_account": "AR-ACC-998721",
+            "failed_attempts": [
+                {
+                    "attempt": 1,
+                    "timestamp": "2026-01-01T18:50:11-03:00",
+                    "reason": "Incorrect PIN"
+                },
+                {
+                    "attempt": 2,
+                    "timestamp": "2026-01-01T18:52:30-03:00",
+                    "reason": "Incorrect PIN"
+                }
+            ]
+        },
+        {
+            "id": "tx-006",
+            "name": "Transportation Payment",
+            "amount": 12.50,
+            "timestamp": "2026-01-01T08:20:00-03:00",
+            "latitude": 19.432608,
+            "longitude": -99.133209,
+            "sender_country": "Mexico",
+            "sender_account": "MX-ACC-441209",
+            "failed_attempts": [
+                {
+                    "attempt": 10,
+                    "timestamp": "2026-01-01T08:18:02-03:00",
+                    "reason": "Network error"
+                }
+            ]
+        }
+    ]
+}
+
+```
+
+
 Enter this endpoint in your browser:
 
 ```
