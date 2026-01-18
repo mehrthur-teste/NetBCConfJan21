@@ -112,10 +112,26 @@ app.MapPost("/run-workflow", async (WorkflowRequest request, IMemoryCache cache)
             result = output.Data?.ToString();
         }
     }
+
+    // crate an especific agent which indente the final result
+    var finalResultAgent = new ChatClientAgent(
+        chatClient,
+        name: "ResultFormatter",
+        instructions: "You are an expert at summarizing and formatting results clearly and concisely for another system consume.",
+        description: "Formats the final result of the workflow execution."
+    );
+    var finalResult = await finalResultAgent.RunAsync($"Please format the following result as Json the object for serialize in .net: {result}");
+
+    // Extract the JSON from the markdown-formatted response
+    string rawText = (finalResult.Messages.LastOrDefault()?.Contents.LastOrDefault() as TextContent)?.Text ?? "";
+    string jsonText = rawText.Replace("```json\n", "").Replace("\n```", "").Trim();
+
+    // Deserialize to a dynamic object
+    var parsedResult = JsonSerializer.Deserialize<dynamic>(jsonText);
         
-    return Results.Ok(new { 
+    return Results.Ok(new {
         WorkflowId = workflow.GetHashCode().ToString(),
-        Result = result 
+        Result = parsedResult
     });
 });
 
