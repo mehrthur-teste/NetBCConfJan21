@@ -1,8 +1,8 @@
 Before all ensure that the you have .net 10 (LTS version) and SLQ Lite
 
 If you dont have SQL Lite and you notebook is mac :
-  1- Inside folder GitHubAIAgentAPI create another folder and give this name  - sql-lite
-  2- Then create a .sh file which name is **`setup_sqlite.sh`**
+  1. Inside folder `GitHubAIAgentAPI` create another folder and give this name  - sql-lite
+  2. Then create a `.sh` file which name is **`setup_sqlite.sh`**
 
 Create a new .NET _WebApi_ project by typing the following terminal commands in a suitable working directory:
 ```bash
