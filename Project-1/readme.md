@@ -134,6 +134,48 @@ public class PersonInfo {
 }
 ```
 
+Add another folder named _Dapper_ and add to it this C# class named _EmployeeRepository.cs_:
+```csharp
+using Dapper;
+using Npgsql;  // Namespace do PostgreSQL
+using System.Data;
+using Microsoft.Data.Sqlite; // para SQLite
+
+public class EmployeeRepository
+{
+    private readonly string _connectionString;
+
+    public EmployeeRepository(string connectionString)
+    {
+        _connectionString = connectionString;
+    }
+
+    // connect to SQLite, if fails connect to PostgreSQL
+    public async Task<IEnumerable<PersonEntity>> GetEmployeesAsync(string filter)
+    {
+        try
+        {
+            using (IDbConnection dbConnection = new SqliteConnection(_connectionString))
+            {
+                dbConnection.Open();
+                var employees = await dbConnection.QueryAsync<PersonEntity>(filter);
+                return employees;
+            } 
+        }
+        catch (Exception ex)
+        {
+            using (IDbConnection dbConnection = new NpgsqlConnection(_connectionString))
+            {
+                dbConnection.Open();
+                var employees = await dbConnection.QueryAsync<PersonEntity>(filter);
+                return employees;
+            }
+        }
+    }
+}
+
+```
+
 
 In _Program.cs_, add this code right under _"var builder = WebApplication.CreateBuilder(args);"_ to read-in the settings from _appsettings.Development.json_, register the _OpenApi_ service, and configure DB connection:
 ```c#
@@ -144,35 +186,6 @@ string? endpoint = builder.Configuration["GitHub:ApiEndpoint"] ?? "https://model
 builder.Services.AddSingleton(sp =>
     builder.Configuration.GetConnectionString("DefaultConnection") ?? string.Empty
 );
-```
-
-Add another folder named _Dapper_ and add to it this C# class named _EmployeeRepository.cs_:
-```csharp
-public class EmployeeRepository {
-    private readonly string _connectionString;
-
-    public EmployeeRepository(string connectionString) {
-        _connectionString = connectionString;
-    }
-
-    public async Task<IEnumerable<PersonEntity>> GetEmployeesAsync(string filter) {
-        try
-        {
-            using (IDbConnection dbConnection = new NpgsqlConnection(_connectionString)) {
-                dbConnection.Open();
-                var employees = await dbConnection.QueryAsync<PersonEntity>(filter);
-                return employees;
-            } 
-        } catch (Exception ex) {
-            using (IDbConnection dbConnection = new SqliteConnection(_connectionString))
-            {
-                dbConnection.Open();
-                var employees = await dbConnection.QueryAsync<PersonEntity>(filter);
-                return employees;
-            }
-        }
-    }
-}
 ```
 
 Register _EmployeeRepository_ by adding this code to _Program.cs_:
