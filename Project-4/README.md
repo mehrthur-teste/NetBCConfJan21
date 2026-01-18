@@ -627,6 +627,6 @@ For the value of _transactions_, add this transaction array:
 ]
 ```
 
-Click on the blue _Execute_ button. The response confirms that the transaction is indeed fraudulent:
+Click on the blue _Execute_ button. The response confirms that the transaction is indeed fraudulent.
 
 ![bad transaction](bad-transation.png)
