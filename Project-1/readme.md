@@ -205,7 +205,7 @@ string model = builder.Configuration["GitHub:model"] ?? throw new InvalidOperati
 var app = builder.Build();
 
 // Define a simple health check endpoint
-app.MapGet("health-check/", () => "Hello World!");
+app.MapGet("/", () => "Is Running!");
 
 // Endpoint to retrieve employees based on AI-generated filter
 app.MapPatch("/employees", async (EmployeeRepository repository, HttpContext context) =>
@@ -312,7 +312,7 @@ app.Run();
 You can now start your application by executing the following command in the termnal window:
 ```bash
 dotnet clean
-dotnet buildß
+dotnet build
 dotnet run
 ```
 
@@ -336,7 +336,7 @@ curl -X POST http://localhost:5241/agent-run \
 
 Similaraly, you can execute this command to test out the _sql-agent-run_ endpoint:
 ```bash
-curl -X PATCH http://localhost:5122/sql-agent-run \
+curl -X PATCH http://localhost:5122/employees \
 -H "Content-Type: application/json" \
 -d '{
     "Prompt1": "Table is employee built as Name VARCHAR(100), Age INT, Occupation VARCHAR(100)",
@@ -346,4 +346,38 @@ curl -X PATCH http://localhost:5122/sql-agent-run \
     "schemaDescription": "Contains only a raw SQL query with no explanation or additional text",
     "Go" : "Please provide a quickly and sample query -  select all employe who is not software enginner remember that - {chatConfig.Prompt1} ?"
 }'
+```
+
+or running using .http
+```http
+@GitHubAIAgentAPI_HostAddress = http://localhost:5010
+
+
+POST {{GitHubAIAgentAPI_HostAddress}}/agent-run
+Content-Type: application/json
+
+{
+    "Prompt1": "Cristiano Ronaldo",
+    "Prompt2": "Software Engineer",
+    "NameAssistant": "HelpfulAssistant",
+    "Description": "An AI assistant that provides structured information about people.",
+    "schemaName": "PersonInfo",
+    "schemaDescription": "Information about a person including their name, age, and occupation",
+    "Instructions": "You are a helpful assistant that provides structured information about people.",
+    "Go": "Please provide information about {chatConfig.Prompt1} see on the internet, is he {chatConfig.Prompt2} or not?"
+}
+
+###
+
+PATCH {{GitHubAIAgentAPI_HostAddress}}/employees
+Content-Type: application/json
+
+{
+    "Prompt1": "Table is employee built as Name VARCHAR(100), Age INT, Occupation VARCHAR(100)",
+    "NameAssistant": "SQLHelpfulAssistant",
+    "Description": "An AI assistant that query to inject sql postgres client.",
+    "schemaName": "PersonInfo",
+    "schemaDescription": "Contains only a raw SQL query with no explanation or additional text",
+    "Go": "Please provide a quickly and sample query -  select all employe who is not software enginner remember that - {chatConfig.Prompt1} ?"
+}
 ```
