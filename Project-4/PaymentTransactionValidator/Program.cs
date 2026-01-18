@@ -28,6 +28,7 @@ string apiKey = builder.Configuration["GitHub:ApiKey"] ?? throw new InvalidOpera
 string model = builder.Configuration["GitHub:model"] ?? throw new InvalidOperationException("AzureOpenAI:DeploymentName configuration is missing");
 var app = builder.Build();
 
+// Create a chat client for OpenAI
 IChatClient chatClient = new ChatClient(
     model,
     new AzureKeyCredential(apiKey!),
@@ -41,6 +42,7 @@ IChatClient chatClient = new ChatClient(
 app.MapGet("health-check/", () => "Hello World!");
 
 app.MapPost("/create-agent", (Agent AgentConfig, IMemoryCache cache) => {
+    // Create agents based on provided prompts
     var agents = AgentConfig.Prompts!.Select(prompt => 
         new ChatClientAgent(
             chatClient,
@@ -55,6 +57,7 @@ app.MapPost("/create-agent", (Agent AgentConfig, IMemoryCache cache) => {
         cache.Set(agent.Id, agent);
     }
     
+    // Prepare result with agent details
     var result = new {
         ChatClientId = chatClient.GetHashCode().ToString(),
         Agents = agents.Select(agent => new {
@@ -78,15 +81,17 @@ app.MapPost("/run-workflow", async (WorkflowRequest request, IMemoryCache cache)
         (ExecutorBinding)cache.Get<ChatClientAgent>(id)!
     ).ToArray();
     
+    // Create aggregation executor
     var aggregationExecutor = new ConcurrentAggregationExecutor(targets.Length);
 
+    // Build the workflow by adding executors and connecting them
     var workflow = new WorkflowBuilder(startExecutor)
         .AddFanOutEdge(startExecutor, targets: targets)
         .AddFanInEdge(sources: targets, aggregationExecutor)
         .WithOutputFrom(aggregationExecutor)
         .Build();
 
-    // Serializar Transactions para string se existir
+    // Build input message
     string transactionData = request.Transactions != null 
         ? JsonSerializer.Serialize(request.Transactions) 
         : "";
@@ -95,9 +100,10 @@ app.MapPost("/run-workflow", async (WorkflowRequest request, IMemoryCache cache)
         ? $"Analyze these transactions: {transactionData}. {request.Question ?? "Are these transactions fraudulent?"}"
         : request.Question ?? "According the agents, are these transactions fraudulent mainly the first object? Just answer using Allow or Block.";
 
-    // Execute workflow and collect result
+    // Execute the workflow in streaming mode
     await using StreamingRun run = await InProcessExecution.StreamAsync(workflow, inputMessage);
     
+    // Collect the output from the workflow
     string? result = null;
     await foreach (WorkflowEvent evt in run.WatchStreamAsync())
     {

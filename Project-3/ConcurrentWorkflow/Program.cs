@@ -1,4 +1,5 @@
-﻿using Azure;
+﻿// Import necessary namespaces for Azure, AI agents, workflows, configuration, and OpenAI
+using Azure;
 using ConcurrentWorkflow.Models;
 using Microsoft.Agents.AI;
 using Microsoft.Agents.AI.Workflows;
@@ -7,17 +8,21 @@ using Microsoft.Extensions.Configuration;
 using OpenAI;
 using OpenAI.Chat;
 
+// Build configuration from appsettings.json
 var config = new ConfigurationBuilder()
     .SetBasePath(Directory.GetCurrentDirectory())
     .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
     .Build();
 
+// Retrieve configuration values for GitHub OpenAI integration
 string? apiKey = config["GitHub:Token"];
 string? model = config["GitHub:Model"] ?? "openai/gpt-4o-mini";
 string? endpoint = config["GitHub:ApiEndpoint"] ?? "https://models.github.ai/inference";
 
+// Log the configuration for debugging
 Console.WriteLine($"Using model: {model} at endpoint: {endpoint} with API key: {(apiKey != null ? "****" : "null")}");
 
+// Create a chat client for OpenAI
 IChatClient chatClient = new ChatClient(
     model,
     new AzureKeyCredential(apiKey!),
@@ -28,7 +33,7 @@ IChatClient chatClient = new ChatClient(
 )
 .AsIChatClient();
 
-// Create the AI agents with specialized expertise
+// Create AI agents with specialized expertise
 ChatClientAgent physicist = new(
     chatClient,
     name: "Physicist",
@@ -41,8 +46,8 @@ ChatClientAgent chemist = new(
     instructions: "You are an expert in chemistry. You answer questions from a chemistry perspective."
 );
 
+// Create executors for workflow management
 var startExecutor = new ConcurrentStartExecutor();
-
 var aggregationExecutor = new ConcurrentAggregationExecutor(2);
 
 // Build the workflow by adding executors and connecting them
@@ -56,6 +61,7 @@ var workflow = new WorkflowBuilder(startExecutor)
 await using StreamingRun run = await InProcessExecution.StreamAsync(workflow, "What is temperature?");
 Console.WriteLine($"Workflow execution started.");
 
+// Watch the workflow events and handle outputs
 await foreach (WorkflowEvent evt in run.WatchStreamAsync())
 {
     if (evt is WorkflowOutputEvent output)
