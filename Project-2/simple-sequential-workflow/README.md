@@ -19,11 +19,6 @@ dotnet add package Microsoft.Agents.AI.Workflows -v 1.0.0-preview.251204.1
 **Program.cs**
 
 ```C#
-using System;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.Agents.AI.Workflows;
-
 /*
 This tutorial demonstrates how to create a simple sequential workflow using Agent Framework Workflows.
 */
