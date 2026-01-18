@@ -57,7 +57,7 @@ If you dont have SQL Lite and you notebook is mac :
     echo "📍 Database path: database/app.db"
 
     brew install sqlite
-    ```
+    
  4. Save the file and give execute permission by running this command in terminal :
     ```bash
     chmod +x setup_sqlite.sh
