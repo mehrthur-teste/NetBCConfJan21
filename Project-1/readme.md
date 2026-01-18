@@ -178,33 +178,45 @@ public class EmployeeRepository
 
 
 In _Program.cs_, add this code right under _"var builder = WebApplication.CreateBuilder(args);"_ to read-in the settings from _appsettings.Development.json_, register the _OpenApi_ service, and configure DB connection:
-```c#
-string? apiKey = builder.Configuration["GitHub:Token"];
-string? model = builder.Configuration["GitHub:Model"] ?? "openai/gpt-4o-mini";
-string? endpoint = builder.Configuration["GitHub:ApiEndpoint"] ?? "https://models.github.ai/inference";
+```C#
+// Import necessary namespaces for Azure, AI agents, JSON handling, and OpenAI
+using Azure;
+using Microsoft.Agents.AI;
+using Microsoft.Extensions.AI;
+using System.Text.Json;
+using OpenAI;
 
+// Create a new web application builder with command-line arguments
+var builder = WebApplication.CreateBuilder(args);
+
+
+// Register the connection string for database access
 builder.Services.AddSingleton(sp =>
     builder.Configuration.GetConnectionString("DefaultConnection") ?? string.Empty
 );
-```
 
-Register _EmployeeRepository_ by adding this code to _Program.cs_:
-```c#
+// Register the EmployeeRepository for dependency injection
 builder.Services.AddScoped<EmployeeRepository>();
-```
-Remove all Weather related code in _Program.cs_. 
 
-Add these endpoints right before _app.Run();_ in _Program.cs_:
+// Read configuration values for Azure OpenAI
+string endpoint = builder.Configuration["GitHub:Endpoint"] ?? throw new InvalidOperationException("GitHub:Endpoint configuration is missing");
+string apiKey = builder.Configuration["GitHub:ApiKey"] ?? throw new InvalidOperationException("GitHub:ApiKey configuration is missing");
+string model = builder.Configuration["GitHub:model"] ?? throw new InvalidOperationException("GitHub:model configuration is missing");
+var app = builder.Build();
 
-```C#
+// Define a simple health check endpoint
 app.MapGet("health-check/", () => "Hello World!");
 
-// Endpoint para pegar empregados com o filtro
-app.MapPatch("/sql-agent-run", async (EmployeeRepository repository, HttpContext context) =>
+// Endpoint to retrieve employees based on AI-generated filter
+app.MapPatch("/employees", async (EmployeeRepository repository, HttpContext context) =>
 {
+    // Read the chat configuration from the request body
     var chatConfig = await context.Request.ReadFromJsonAsync<ChatConfig>();
+    
+    // Create a JSON schema for the AI response
     JsonElement schema = AIJsonUtilities.CreateJsonSchema(typeof(AIResponse));
 
+    // Configure chat options with instructions and response format
     ChatOptions chatOptions = new()
     {
         Instructions = chatConfig!.Intructions,
@@ -214,6 +226,7 @@ app.MapPatch("/sql-agent-run", async (EmployeeRepository repository, HttpContext
             schemaDescription: chatConfig.SchemaDescription)
     };
 
+    // Create a chat client for OpenAI
     IChatClient chatClient = new OpenAI.Chat.ChatClient(
         model,
         new AzureKeyCredential(apiKey!),
@@ -224,6 +237,7 @@ app.MapPatch("/sql-agent-run", async (EmployeeRepository repository, HttpContext
     )
     .AsIChatClient();
 
+    // Create an AI agent using the chat client
     var agent = chatClient
     .CreateAIAgent(new ChatClientAgentOptions()
     {
@@ -232,17 +246,24 @@ app.MapPatch("/sql-agent-run", async (EmployeeRepository repository, HttpContext
         ChatOptions = chatOptions
     });
 
+    // Build the dynamic message by replacing placeholders
     string? dynamicMessage = chatConfig!.Go!.Replace("{chatConfig.Prompt1}", chatConfig.Prompt1)
                                             .Replace("{chatConfig.Prompt2}", chatConfig.Prompt2);
+    
+    // Run the AI agent with the dynamic message
     var response = await agent.RunAsync(dynamicMessage);
+    
+    // Deserialize the response to get the filter
     var filter = response.Deserialize<AIResponse>(JsonSerializerOptions.Web);
 
+    // Query the database for employees using the AI-generated filter
     var employees = await repository.GetEmployeesAsync(filter.AIAnswer!);
 
+    // Return the list of employees
     return Results.Ok(employees);
 });
 
-
+// Endpoint to run AI agent for generating person information
 app.MapPost("/agent-run", async (HttpContext context) =>
 {
 
@@ -280,31 +301,18 @@ app.MapPost("/agent-run", async (HttpContext context) =>
     string? dynamicMessage = chatConfig!.Go!.Replace("{chatConfig.Prompt1}", chatConfig.Prompt1)
                                             .Replace("{chatConfig.Prompt2}", chatConfig.Prompt2);
     var response = await agent.RunAsync(dynamicMessage);
-
-    Console.WriteLine(response.ToString());
-
     var personInfo = response.Deserialize<PersonInfo>(JsonSerializerOptions.Web);
     return Results.Ok(personInfo);
 });
-```
-Add a folder named _Database_ and add to it a file named _init.sql_ with this SQL content:
 
-```sql
-CREATE TABLE IF NOT EXISTS employee (
-    Name TEXT,
-    Age INTEGER,
-    Occupation TEXT
-);
+app.Run();
 
-INSERT INTO employee (Name, Age, Occupation) VALUES
-('John Doe', 30, 'Software Engineer'),
-('Jane Smith', 28, 'Data Analyst'),
-('Alice Johnson', 35, 'Product Manager');
 ```
-Using an SQLite interface, execute the above SQL command to create an _employees_ table and populate it with some sample data.
 
 You can now start your application by executing the following command in the termnal window:
 ```bash
+dotnet clean
+dotnet buildß
 dotnet run
 ```
 
