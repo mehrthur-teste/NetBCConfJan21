@@ -75,17 +75,16 @@ For Windows users, download sqlite3 from https://www.sqlite.org/download.html. T
 - create a file named _init.sql_ in a folder named _database_ with this SQL script:
 
 ```sql
-    CREATE TABLE IF NOT EXISTS employee (
-        Name TEXT,
-        Age INTEGER,
-        Occupation TEXT
-    );
+CREATE TABLE IF NOT EXISTS employee (
+    Name TEXT,
+    Age INTEGER,
+    Occupation TEXT
+);
 
-    INSERT INTO employee (Name, Age, Occupation) VALUES
-    ('John Doe', 30, 'Software Engineer'),
-    ('Jane Smith', 28, 'Data Analyst'),
-    ('Alice Johnson', 35, 'Product Manager');
-    EOF
+INSERT INTO employee (Name, Age, Occupation) VALUES
+('John Doe', 30, 'Software Engineer'),
+('Jane Smith', 28, 'Data Analyst'),
+('Alice Johnson', 35, 'Product Manager');
 ```
 
 - then, execute this command from the app's root folder:

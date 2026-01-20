@@ -17,6 +17,7 @@ dotnet add package Microsoft.Agents.AI.Workflows -v 1.0.0-preview.251204.1
 ```
 
 **Program.cs**
+Replce contents of _Program.cs_ with the following code:
 
 ```C#
 /*
