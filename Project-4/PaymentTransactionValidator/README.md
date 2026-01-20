@@ -143,10 +143,6 @@ var builder = WebApplication.CreateBuilder(args);
 // Add MemoryCache
 builder.Services.AddMemoryCache();
 
-// Add connection string to Configuration
-builder.Services.AddSingleton(sp =>
-    builder.Configuration.GetConnectionString("DefaultConnection") ?? string.Empty
-);
 
 // Read configuration values for Azure OpenAI
 string endpoint = builder.Configuration["GitHub:Endpoint"] ?? throw new InvalidOperationException("AzureOpenAI:Endpoint configuration is missing");
