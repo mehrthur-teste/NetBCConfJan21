@@ -3,6 +3,7 @@
 ```bash
 dotnet new console -n ConcurrentWorkflow
 cd ConcurrentWorkflow
+mkdir Models
 ```
 
 ### 2. Add Required Packages
@@ -30,12 +31,7 @@ dotnet add package Microsoft.Extensions.Configuration.Json --version 10.0.1
 ```
 Make sure you put the correct value for your Github personal access token.
 
-### 4. Create Project Structure
-```bash
-mkdir Models
-```
-
-### 5. Implement Core Files
+### 4. Implement Core Files
 
 **Models/ConcurrentAggregationExecutor.cs** - Response aggregation
 
@@ -184,7 +180,7 @@ await foreach (WorkflowEvent evt in run.WatchStreamAsync())
 
 ```
 
-### 6. Run the application
+### 5. Run the application
 
 ```bash
 dotnet run
