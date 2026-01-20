@@ -293,7 +293,7 @@ Content-Type: application/json
 
 ###
 
-POST {{GitHubAIAgentAPI_HostAddress}}/run-workflow
+PATCH {{GitHubAIAgentAPI_HostAddress}}/run-workflow
 Content-Type: application/json
 {
     "Question": "I have never been to Brazil and have never purchased anything from Brazil. According to the transaction history object, is the first transaction fraudulent?",
