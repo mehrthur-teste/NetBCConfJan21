@@ -133,7 +133,7 @@ using OpenAI;
 using OpenAI.Chat;
 using Microsoft.Extensions.Caching.Memory;
 
-using PaymentTransactionValidator.Models;
+using ConcurrentWorkflow.Models;
 using Microsoft.Agents.AI.Workflows;
 
 using Microsoft.Extensions.Configuration;
@@ -151,7 +151,7 @@ builder.Services.AddSingleton(sp =>
 // Read configuration values for Azure OpenAI
 string endpoint = builder.Configuration["GitHub:Endpoint"] ?? throw new InvalidOperationException("AzureOpenAI:Endpoint configuration is missing");
 string apiKey = builder.Configuration["GitHub:ApiKey"] ?? throw new InvalidOperationException("AzureOpenAI:ApiKey configuration is missing");
-string model = builder.Configuration["GitHub:Model"] ?? throw new InvalidOperationException("AzureOpenAI:DeploymentName configuration is missing");
+string model = builder.Configuration["GitHub:model"] ?? throw new InvalidOperationException("AzureOpenAI:DeploymentName configuration is missing");
 var app = builder.Build();
 
 // Create a chat client for OpenAI
@@ -238,16 +238,31 @@ app.MapPost("/run-workflow", async (WorkflowRequest request, IMemoryCache cache)
             result = output.Data?.ToString();
         }
     }
+
+    // crate an especific agent which indente the final result
+    var finalResultAgent = new ChatClientAgent(
+        chatClient,
+        name: "ResultFormatter",
+        instructions: "You are an expert at summarizing and formatting results clearly and concisely for another system consume.",
+        description: "Formats the final result of the workflow execution."
+    );
+    var finalResult = await finalResultAgent.RunAsync($"Please format the following result as Json the object for serialize in .net: {result}");
+
+    // Extract the JSON from the markdown-formatted response
+    string rawText = (finalResult.Messages.LastOrDefault()?.Contents.LastOrDefault() as TextContent)?.Text ?? "";
+    string jsonText = rawText.Replace("```json\n", "").Replace("\n```", "").Trim();
+
+    // Deserialize to a dynamic object
+    var parsedResult = JsonSerializer.Deserialize<dynamic>(jsonText);
         
-    return Results.Ok(new { 
+    return Results.Ok(new {
         WorkflowId = workflow.GetHashCode().ToString(),
-        Result = result 
+        Result = parsedResult
     });
 });
 
 
 app.Run();
-
 ```
 
 **Try the application**
