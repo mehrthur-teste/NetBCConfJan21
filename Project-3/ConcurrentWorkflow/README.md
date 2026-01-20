@@ -215,39 +215,3 @@ In more technical terms, temperature can be defined in several ways:
 
 In practical applications, temperature is crucial in a wide range of fields, including meteorology, engineering, biology, and materials science, influencing everything from weather patterns to the behavior of materials under different conditions.
 ```
-
-
-### 7. Configure GitHub Models
-- Obtain GitHub Personal Access Token
-- Configure appsettings.json with token and model settings
-- Test connection with provided script
-</details>
-
-## Key Features
-
-- **Concurrent Processing**: Multiple AI agents process simultaneously
-- **Specialized Agents**: Physics and Chemistry domain experts
-- **Workflow Orchestration**: Microsoft Agents AI Workflows framework
-- **GitHub Models Integration**: Uses GitHub's AI model inference API
-- **Streaming Output**: Real-time workflow execution monitoring
-- **Configurable Models**: Easy switching between different AI models
-
-## Troubleshooting
-
-<details>
-<summary>🔧 Common Issues</summary>
-
-**Token Issues:**
-- Ensure GitHub token has Models access
-- Check token is correctly set in appsettings.json
-- Run test-token.sh to validate
-
-**Build Issues:**
-- Ensure .NET 10.0 SDK is installed
-- Run `dotnet restore` before building
-- Check all package versions are compatible
-
-**Runtime Issues:**
-- Verify internet connection for GitHub Models API
-- Check API endpoint is accessible
-- Ensure model name is correct in configuration
