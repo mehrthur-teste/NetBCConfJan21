@@ -23,7 +23,7 @@ dotnet add package Microsoft.Extensions.Configuration.Json --version 10.0.1
 ```json
 {
     "GitHub": {
-        "Token": "PUT-GITHUB-PERSONAL-ACCESS-TOKEN-HERE",
+        "ApiKey": "PUT-GITHUB-PERSONAL-ACCESS-TOKEN-HERE",
         "ApiEndpoint": "https://models.github.ai/inference",
         "Model": "openai/gpt-4o-mini"
     }
@@ -123,7 +123,7 @@ var config = new ConfigurationBuilder()
     .Build();
 
 // Retrieve configuration values for GitHub OpenAI integration
-string? apiKey = config["GitHub:Token"];
+string? apiKey = config["GitHub:ApiKey"];
 string? model = config["GitHub:Model"] ?? "openai/gpt-4o-mini";
 string? endpoint = config["GitHub:ApiEndpoint"] ?? "https://models.github.ai/inference";
 
