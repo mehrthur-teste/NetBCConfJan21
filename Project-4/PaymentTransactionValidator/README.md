@@ -24,7 +24,7 @@ Add this section to *appsettings.Development.json*:
 "GitHub": {
   "Endpoint": "https://models.github.ai/inference",
   "ApiKey": "PUT-GITHUB-PERSONAL-ACCESS-TOKEN-HERE",
-  "model": "gpt-4.1-mini"
+  "Model": "gpt-4.1-mini"
 }
 ```
 
@@ -157,7 +157,7 @@ builder.Services.AddSingleton(sp =>
 // Read configuration values for Azure OpenAI
 string endpoint = builder.Configuration["GitHub:Endpoint"] ?? throw new InvalidOperationException("AzureOpenAI:Endpoint configuration is missing");
 string apiKey = builder.Configuration["GitHub:ApiKey"] ?? throw new InvalidOperationException("AzureOpenAI:ApiKey configuration is missing");
-string model = builder.Configuration["GitHub:model"] ?? throw new InvalidOperationException("AzureOpenAI:DeploymentName configuration is missing");
+string model = builder.Configuration["GitHub:Model"] ?? throw new InvalidOperationException("AzureOpenAI:DeploymentName configuration is missing");
 var app = builder.Build();
 
 // Create a chat client for OpenAI

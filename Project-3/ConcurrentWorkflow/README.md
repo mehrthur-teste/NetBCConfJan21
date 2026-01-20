@@ -36,7 +36,6 @@ Make sure you put the correct value for your Github personal access token.
 **Models/ConcurrentAggregationExecutor.cs** - Response aggregation
 
 ```C#
-using System;
 using Microsoft.Agents.AI.Workflows;
 using Microsoft.Extensions.AI;
 
@@ -45,7 +44,7 @@ namespace ConcurrentWorkflow.Models;
 /// <summary>
 /// Executor that aggregates the results from the concurrent agents.
 /// </summary>
-internal sealed class ConcurrentAggregationExecutor(int expectedAgentCount = 3) :
+internal sealed class ConcurrentAggregationExecutor(int expectedAgentCount = 2) :
     Executor<List<ChatMessage>>("ConcurrentAggregationExecutor") {
     private readonly List<ChatMessage> _messages = [];
     private readonly int _expectedCount = expectedAgentCount;
