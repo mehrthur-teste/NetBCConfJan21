@@ -312,7 +312,7 @@ Click on _Send Request_ link above the HTTP request.
 
 The response will show three agents. Copy the _id_ numbers of the three agents and save them to a text file. We will use these id numbers later. 
 
-Next, we will put our agents to work. Run the following HTTP Request in the same _PaymentTransactionValidator.http_ file after replacing the numbers in the _AgentIds_ array with the _id_ numbers you saved earlier.
+Next, we will put our agents to work. Run the following HTTP request in the same _PaymentTransactionValidator.http_ file after replacing the numbers in the _AgentIds_ array with the _id_ numbers you saved earlier.
 
 ```
 ###
