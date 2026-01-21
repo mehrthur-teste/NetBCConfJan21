@@ -27,6 +27,7 @@ Add this section to *appsettings.Development.json*:
   "Model": "gpt-4.1-mini"
 }
 ```
+NOTE: Remember to replace "PUT-GITHUB-PERSONAL-ACCESS-TOKEN-HERE" with your own token.
 
 **Models/Prompt.cs**
 
@@ -133,7 +134,7 @@ using OpenAI;
 using OpenAI.Chat;
 using Microsoft.Extensions.Caching.Memory;
 
-using ConcurrentWorkflow.Models;
+using PaymentTransactionValidator.Models;
 using Microsoft.Agents.AI.Workflows;
 
 using Microsoft.Extensions.Configuration;
@@ -145,9 +146,9 @@ builder.Services.AddMemoryCache();
 
 
 // Read configuration values for Azure OpenAI
-string endpoint = builder.Configuration["GitHub:Endpoint"] ?? throw new InvalidOperationException("AzureOpenAI:Endpoint configuration is missing");
-string apiKey = builder.Configuration["GitHub:ApiKey"] ?? throw new InvalidOperationException("AzureOpenAI:ApiKey configuration is missing");
-string model = builder.Configuration["GitHub:model"] ?? throw new InvalidOperationException("AzureOpenAI:DeploymentName configuration is missing");
+string endpoint = builder.Configuration["GitHub:Endpoint"] ?? throw new InvalidOperationException("GitHub:Endpoint configuration is missing");
+string apiKey = builder.Configuration["GitHub:ApiKey"] ?? throw new InvalidOperationException("GitHub:ApiKey configuration is missing");
+string model = builder.Configuration["GitHub:Model"] ?? throw new InvalidOperationException("GitHub:Model configuration is missing");
 var app = builder.Build();
 
 // Create a chat client for OpenAI
