@@ -430,6 +430,12 @@ Content-Type: application/json
 </details>
 
 <details><summary>Using Swagger UI</summary>
+In a terminal window in the root folder of the app, run the application with:
+
+```bash
+dotnet run
+```
+
 Enter this endpoint in your browser:
 
 ```
