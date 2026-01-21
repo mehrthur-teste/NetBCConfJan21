@@ -15,8 +15,8 @@ If you dont have SQL Lite and you notebook is mac :
   2. Then create a `.sh` file which the recomended name is **`setup_sqlite.sh`** .
   3. Inside this file paste below code for macOS:
     ```bash
+   
     !/bin/bash
-
     set -e
 
     echo "🔧 Installing SQLite..."
