@@ -440,7 +440,7 @@ Content-Type: application/json
 ```
 <!-- </details> -->
 
-<div style="display:none;">
+<!--
 <details><summary>Using Swagger UI</summary>
 In a terminal window in the root folder of the app, run the application with:
 
@@ -661,4 +661,4 @@ Click on the blue _Execute_ button. The response confirms that the transaction i
 
 ![bad transaction](bad-transation.png)
 </details>
-</div>
+-->
