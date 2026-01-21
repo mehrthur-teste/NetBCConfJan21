@@ -264,7 +264,7 @@ app.Run();
 
 **Try the application**
 
-<details><summary>Using REST Client</summary>
+<!-- <details><summary>Using REST Client</summary> -->
 
 In a terminal window in the root folder of the app, run the application with:
 
@@ -306,7 +306,7 @@ Content-Type: application/json
 }
 ```
 
-Click on _Send Request_ above the HTTP request.
+Click on _Send Request_ link above the HTTP request.
 
 ![send request](send-request-link.png)
 
@@ -438,8 +438,9 @@ Content-Type: application/json
 }
 
 ```
-</details>
+<!-- </details> -->
 
+<div style="display:none;">
 <details><summary>Using Swagger UI</summary>
 In a terminal window in the root folder of the app, run the application with:
 
@@ -474,7 +475,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 ```
 
-In the same *Program.cs* file, add this code insode the *"if (app.Environment.IsDevelopment())"* block:
+In the same *Program.cs* file, add this code inside the *"if (app.Environment.IsDevelopment())"* block:
 
 Edit the _Properties/launchSettings.json_ file and make these changes:
 
@@ -660,3 +661,4 @@ Click on the blue _Execute_ button. The response confirms that the transaction i
 
 ![bad transaction](bad-transation.png)
 </details>
+</div>
