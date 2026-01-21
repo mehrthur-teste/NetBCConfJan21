@@ -276,12 +276,13 @@ If you are using VS Code, ensure that you have the following extension installed
 
 ![rest client extension](rest-client-extension.png)
 
-Or running using .http file after adjusting the port number to match your environment.
+Run the following in the _PaymentTransactionValidator.http_ file after adjusting the port number to match your environment.
+
 ```http
-@GitHubAIAgentAPI_HostAddress = http://localhost:5010
+@PaymentTransactionValidator_HostAddress = http://localhost:5010
 
 
-POST {{GitHubAIAgentAPI_HostAddress}}/create-agent
+POST {{PaymentTransactionValidator_HostAddress}}/create-agent
 Content-Type: application/json
 
 {
@@ -303,12 +304,22 @@ Content-Type: application/json
     }
   ]
 }
+```
 
+Click on _Send Request_ above the HTTP request.
 
+![send request](send-request.png)
+
+The response will show three agents. Copy the _id_ numbers of the three agents and save them to a text file. We will use these id numbers later. 
+
+Next, we will put our agents to work. Run the following HTTP Request in the same _PaymentTransactionValidator.http_ file after replacing the numbers in the _AgentIds_ array with the _id_ numbers you saved earlier.
+
+```
 ###
 
-POST {{GitHubAIAgentAPI_HostAddress}}/run-workflow
+POST {{PaymentTransactionValidator_HostAddress}}/run-workflow
 Content-Type: application/json
+
 {
     "Question": "I have never been to Brazil and have never purchased anything from Brazil. According to the transaction history object, is the first transaction fraudulent?",
     "AgentIds": [
