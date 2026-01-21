@@ -308,7 +308,7 @@ Content-Type: application/json
 
 Click on _Send Request_ above the HTTP request.
 
-![send request](send-request.png)
+![send request](send-request-link.png)
 
 The response will show three agents. Copy the _id_ numbers of the three agents and save them to a text file. We will use these id numbers later. 
 
