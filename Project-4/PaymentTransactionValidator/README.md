@@ -264,6 +264,8 @@ app.Run();
 
 **Try the application**
 
+<details><summary>Using REST Client</summary>
+
 In a terminal window in the root folder of the app, run the application with:
 
 ```bash
@@ -425,8 +427,9 @@ Content-Type: application/json
 }
 
 ```
+</details>
 
-
+<details><summary>Using Swagger UI</summary>
 Enter this endpoint in your browser:
 
 ```
@@ -639,3 +642,4 @@ For the value of _transactions_, add this transaction array:
 Click on the blue _Execute_ button. The response confirms that the transaction is indeed fraudulent.
 
 ![bad transaction](bad-transation.png)
+</details>
